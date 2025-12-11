@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import dynamic from "next/dynamic";
 import {
     Mail,
     Lock,
@@ -15,6 +15,15 @@ import {
     User,
     Check
 } from "lucide-react";
+
+// Dynamically import Dialog components to reduce initial bundle size (Unused JS optimization)
+const Dialog = dynamic(() => import("@/components/ui/dialog").then((mod) => mod.Dialog), { ssr: false });
+const DialogContent = dynamic(() => import("@/components/ui/dialog").then((mod) => mod.DialogContent), { ssr: false });
+const DialogDescription = dynamic(() => import("@/components/ui/dialog").then((mod) => mod.DialogDescription), { ssr: false });
+const DialogFooter = dynamic(() => import("@/components/ui/dialog").then((mod) => mod.DialogFooter), { ssr: false });
+const DialogHeader = dynamic(() => import("@/components/ui/dialog").then((mod) => mod.DialogHeader), { ssr: false });
+const DialogTitle = dynamic(() => import("@/components/ui/dialog").then((mod) => mod.DialogTitle), { ssr: false });
+
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
@@ -238,7 +247,13 @@ function AuthPageContent() {
                     {/* Header Logo */}
                     <div>
                         <div className="inline-flex items-center gap-3 bg-white shadow-lg shadow-black/5 rounded-full px-5 py-2.5 mb-8">
-                            <Image src={Logo} alt="Petskub Logo" className="w-8 h-auto" />
+                            <Image
+                                src={Logo}
+                                alt="Petskub Logo"
+                                className="w-8 h-auto"
+                                priority
+                                sizes="(max-width: 768px) 32px, 32px"
+                            />
                             <span className={cn(
                                 "font-bold tracking-widest text-sm",
                                 isLogin ? "text-[#F97316]" : "text-[#10B981]"
