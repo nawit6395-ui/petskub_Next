@@ -60,7 +60,7 @@ export const tileLayerOptions: L.TileLayerOptions = hasMapTilerKey
     zoomOffset: -1,
     minZoom: 2,
     maxZoom: 19,
-    // detectRetina: true, // Disabled to improve performance (LCP)
+    detectRetina: true, // Re-enabled for high resolution displays
   }
   : {
     attribution: tileLayerAttribution,
