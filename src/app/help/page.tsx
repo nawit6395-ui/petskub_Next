@@ -1,0 +1,239 @@
+"use client";
+
+import { AlertCircle, Phone, Plus } from "lucide-react";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { UrgentCaseCard } from "@/components/UrgentCaseCard";
+// import { ResponsivePicture } from "@/components/ResponsivePicture";
+import Image from "next/image";
+import { useUrgentCases } from "@/hooks/useUrgentCases";
+import { useAuth } from "@/hooks/useAuth";
+import rescuePrimaryPicture from "@/assets/knowledge-sick-cat.jpg";
+import rescueSecondaryPicture from "@/assets/knowledge-parasite-check.jpg";
+import rescueSupportPicture from "@/assets/knowledge-dangerous-foods.jpg";
+import rescueCarePicture from "@/assets/knowledge-cat-adjusting.jpg";
+import rescueFocusPicture from "@/assets/knowledge-trimming-nails.jpg";
+
+const HelpPage = () => {
+  const { data: urgentCases, isLoading } = useUrgentCases({ includeResolved: true });
+  const { user } = useAuth();
+  const activeCases = urgentCases?.filter((urgentCase) => !urgentCase.is_resolved) ?? [];
+  const resolvedCases = urgentCases?.filter((urgentCase) => urgentCase.is_resolved) ?? [];
+
+  return (
+    <div className="min-h-screen bg-background py-8">
+      <div className="container mx-auto px-4">
+        <section className="mb-12 rounded-[46px] border border-white/70 bg-gradient-to-br from-[#fff0f2] via-white to-[#f0fcf7] px-5 py-8 shadow-[0_25px_80px_rgba(15,23,42,0.08)] sm:px-10 sm:py-12">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.05fr,0.95fr]">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+                  <span>Emergency</span>
+                  <span className="rounded-full bg-white/90 px-4 py-1 tracking-normal text-rose-600 shadow-sm">24/7 SOS</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="font-prompt text-4xl font-bold text-rose-600">ช่วยเหลือด่วน</h1>
+                  <span className="rounded-2xl bg-gradient-to-r from-rose-500 via-rose-400 to-orange-400 px-3 py-1 text-sm font-semibold text-white shadow-soft">SOS</span>
+                </div>
+                <p className="font-prompt text-base text-muted-foreground sm:text-lg">
+                  รายงานอุบัติเหตุ บาดเจ็บ หรือแมวสุนัขตกทุกข์ได้ยาก ระบุตำแหน่งและข้อมูลติดต่อให้ทีมช่วยเหลือเดินทางถึงพื้นที่ได้เร็วขึ้น
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex items-start gap-3 rounded-3xl border border-rose-100 bg-white/90 p-4 text-sm shadow-[0_18px_45px_rgba(244,114,182,0.15)]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-100 text-lg">📷</div>
+                  <div>
+                    <p className="font-semibold text-slate-900">เพิ่มรูปหลักฐาน</p>
+                    <p className="text-xs text-muted-foreground">ช่วยทีมประเมินความเสี่ยงและเตรียมอุปกรณ์ตรงจุด</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-3xl border border-emerald-100 bg-white/90 p-4 text-sm shadow-[0_18px_45px_rgba(16,185,129,0.18)]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-lg">🎯</div>
+                  <div>
+                    <p className="font-semibold text-slate-900">ระบบจับพิกัดอัตโนมัติ</p>
+                    <p className="text-xs text-muted-foreground">แนะนำจุดช่วยเหลือใกล้เคียงในรัศมี 5 กม.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {user ? (
+                  <Link href="/add-urgent-case" className="inline-flex">
+                    <Button className="rounded-2xl bg-gradient-to-r from-rose-500 to-orange-400 px-6 py-5 text-base font-prompt text-white shadow-soft">
+                      <Plus className="h-4 w-4" />
+                      แจ้งกรณีฉุกเฉินทันที
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/login" className="inline-flex">
+                    <Button className="rounded-2xl bg-gradient-to-r from-rose-500 to-orange-400 px-6 py-5 text-base font-prompt text-white shadow-soft">
+                      <Plus className="h-4 w-4" />
+                      เข้าสู่ระบบเพื่อแจ้งเหตุ
+                    </Button>
+                  </Link>
+                )}
+                <Button variant="outline" className="rounded-2xl border-emerald-300 bg-white px-5 py-5 font-prompt text-emerald-700 shadow-sm">
+                  <Phone className="h-4 w-4" />
+                  โทร 1669 ด่วน
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-3 text-sm font-prompt text-slate-600 sm:gap-6">
+                <div className="flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 shadow-sm ring-1 ring-white/70">
+                  <span className="h-2 w-2 rounded-full bg-rose-500" />
+                  เคสที่รอการช่วยเหลือ {activeCases.length} ราย
+                </div>
+                <div className="flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 shadow-sm ring-1 ring-white/70">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  ปิดเคสแล้ว {resolvedCases.length} ราย
+                </div>
+              </div>
+            </div>
+
+            <div className="relative min-h-[320px] lg:min-h-[360px]">
+              <div className="absolute inset-0 -z-10 rounded-[48px] bg-gradient-to-br from-rose-200/40 via-transparent to-emerald-200/40 blur-3xl" />
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
+                <div className="media-frame h-[260px] w-full sm:h-[320px] relative">
+                  <Image
+                    src={rescuePrimaryPicture}
+                    alt="อาสาช่วยเหลือสัตว์บาดเจ็บ"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 640px"
+                    className="object-cover"
+                    placeholder="blur"
+                  />
+                  <div className="absolute left-4 top-4 rounded-2xl bg-black/55 px-3 py-2 text-[11px] font-prompt text-white shadow-lg">
+                    ปฏิบัติการอยู่ {activeCases.length ? `${activeCases.length} เคส` : "พร้อมรับแจ้ง"}
+                  </div>
+                  <div className="absolute inset-x-5 bottom-5 flex items-center justify-between rounded-2xl bg-white/95 px-4 py-3 text-[11px] font-prompt text-slate-800 shadow-[0_18px_45px_rgba(15,23,42,0.15)] sm:text-sm">
+                    <span className="flex flex-col leading-tight">
+                      <span className="text-xs text-muted-foreground">รอการช่วยเหลือ</span>
+                      <strong className="text-lg text-rose-600">{activeCases.length}</strong>
+                    </span>
+                    <span className="flex flex-col text-right leading-tight">
+                      <span className="text-xs text-muted-foreground">ปิดเคสแล้ว</span>
+                      <strong className="text-lg text-emerald-600">{resolvedCases.length}</strong>
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="media-frame-sm h-[150px] relative">
+                    <Image
+                      src={rescueSecondaryPicture}
+                      alt="การปฐมพยาบาลเบื้องต้นให้สัตว์"
+                      fill
+                      sizes="(max-width: 640px) 90vw, 360px"
+                      className="object-cover"
+                      placeholder="blur"
+                    />
+                  </div>
+                  <div className="rounded-3xl border border-emerald-100 bg-white/95 p-4 text-center font-prompt shadow-lg">
+                    <p className="text-xs text-muted-foreground">ระบบจับพิกัดอัตโนมัติ</p>
+                    <p className="text-xl font-semibold text-emerald-600">ภายใน 5 กม.</p>
+                    <p className="text-xs text-muted-foreground">แจ้งทีมอาสาใกล้ที่สุดทันที</p>
+                  </div>
+                  <div className="media-frame-sm h-[120px] relative">
+                    <Image
+                      src={rescueFocusPicture}
+                      alt="การดูแลสัตว์บาดเจ็บ"
+                      fill
+                      sizes="(max-width: 640px) 90vw, 320px"
+                      className="object-cover"
+                      placeholder="blur"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:hidden">
+                <div className="media-frame-sm h-[120px] relative">
+                  <Image
+                    src={rescueSupportPicture}
+                    alt="อุปกรณ์ช่วยสัตว์"
+                    fill
+                    sizes="(max-width: 640px) 50vw, 220px"
+                    className="object-cover"
+                    placeholder="blur"
+                  />
+                </div>
+                <div className="media-frame-sm h-[120px] relative">
+                  <Image
+                    src={rescueCarePicture}
+                    alt="ทีมช่วยเหลือเตรียมอุปกรณ์"
+                    fill
+                    sizes="(max-width: 640px) 50vw, 220px"
+                    className="object-cover"
+                    placeholder="blur"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Card className="mb-8 border border-urgent/30 bg-urgent/10 p-6 shadow-card">
+          <div className="flex items-start gap-4">
+            <AlertCircle className="h-8 w-8 text-urgent flex-shrink-0" />
+            <div className="flex-1">
+              <h2 className="mb-2 text-xl font-bold font-prompt">ติดต่อฉุกเฉิน</h2>
+              <p className="mb-4 text-muted-foreground font-prompt">
+                หากพบแมวหรือสุนัขบาดเจ็บหรือป่วยหนัก กรุณาติดต่อศูนย์ช่วยเหลือสัตว์ฉุกเฉิน
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button className="gap-2 font-prompt" size="lg">
+                  <Phone className="h-4 w-4" />
+                  โทร 1669 (ฉุกเฉิน)
+                </Button>
+                <Button variant="outline" className="gap-2 font-prompt" size="lg">
+                  <Phone className="h-4 w-4" />
+                  สายด่วนสัตว์ป่วย
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {isLoading ? (
+          <div className="py-12 text-center">
+            <p className="font-prompt text-muted-foreground">กำลังโหลด...</p>
+          </div>
+        ) : urgentCases && urgentCases.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+            {urgentCases.map((urgentCase) => (
+              <UrgentCaseCard key={urgentCase.id} {...urgentCase} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-12 text-center">
+            <p className="font-prompt text-muted-foreground">ไม่มีกรณีฉุกเฉินในขณะนี้</p>
+          </div>
+        )}
+
+        <Card className="mt-12 bg-secondary/50 p-4 sm:p-6">
+          <h2 className="mb-4 text-lg font-bold font-prompt sm:text-xl">🤝 แนวทางการช่วยเหลือ</h2>
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <div>
+              <h3 className="mb-2 font-semibold font-prompt">สิ่งที่ควรทำ</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground font-prompt">
+                <li>✓ ตรวจสอบอาการเบื้องต้น</li>
+                <li>✓ ถ่ายรูปบันทึกหลักฐาน</li>
+                <li>✓ ติดต่อสัตวแพทย์ใกล้เคียง</li>
+                <li>✓ แจ้งตำแหน่งที่ชัดเจน</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-2 font-semibold font-prompt">สิ่งที่ไม่ควรทำ</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground font-prompt">
+                <li>✗ ย้ายสัตว์บาดเจ็บเอง</li>
+                <li>✗ ให้ยาโดยไม่ปรึกษาสัตวแพทย์</li>
+                <li>✗ เพิกเฉยกรณีบาดเจ็บหนัก</li>
+                <li>✗ ให้อาหารไม่เหมาะสม</li>
+              </ul>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default HelpPage;

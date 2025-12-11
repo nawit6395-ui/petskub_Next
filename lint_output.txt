@@ -1,0 +1,248 @@
+
+> next-app@0.1.0 lint
+> eslint
+
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\admin\page.tsx
+    3:10  warning  'useState' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  120:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  211:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\[id]\edit\page.tsx
+   47:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\[id]\edit\page.tsx:47:13
+  45 |     useEffect(() => {
+  46 |         if (post) {
+> 47 |             setTitle(post.title);
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  48 |             setContent(post.content);
+  49 |             setCategory(post.category);
+  50 |             setImageUrls(post.image_urls || []);  react-hooks/set-state-in-effect
+  190:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\[id]\page.tsx
+  278:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\page.tsx
+  74:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\[id]\edit\page.tsx
+  15:27  warning  'Trash2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  38:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\[id]\edit\page.tsx:38:13
+  36 |     useEffect(() => {
+  37 |         if (article) {
+> 38 |             setTitle(article.title);
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |             setContent(article.content);
+  40 |             setCategory(article.category);
+  41 |             setImageUrl(article.image_url || "");  react-hooks/set-state-in-effect
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\create\page.tsx
+  13:10  warning  'useIsAdmin' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\page.tsx
+  16:11  warning  'user' is assigned a value but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  96:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\privacy\page.tsx
+  47:69  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  47:90  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  59:24  warning  'error' is defined but never used                                @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\profile\ProfilePageClient.tsx
+   8:41  warning  'CardTitle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   8:52  warning  'CardDescription' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  14:49  warning  'UserIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  42:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\profile\ProfilePageClient.tsx:42:13
+  40 |     useEffect(() => {
+  41 |         if (profile) {
+> 42 |             setFormData({
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  43 |                 full_name: profile.full_name || "",
+  44 |                 phone: profile.phone || "",
+  45 |                 line_id: profile.line_id || "",  react-hooks/set-state-in-effect
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\report\ReportPageClient.tsx
+    3:54  warning  'ReactNode' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   35:10  warning  'Badge' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   49:3   warning  'openMarkerPopup' is defined but never used                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   50:3   warning  'closeMarkerPopup' is defined but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   52:3   warning  'releaseMarkerPopup' is defined but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   54:8   warning  'ReportMapOverview' is defined but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   71:7   warning  'mapButtonClass' is assigned a value but never used                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   85:10  warning  'geoStatus' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  321:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  343:9   warning  'activeReports' is assigned a value but never used                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  722:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  746:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\reports\map\ReportMapClient.tsx
+   31:10  warning  'Card' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   33:10  warning  'ScrollArea' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   48:3   warning  'LocateFixed' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   54:3   warning  'Users' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   58:3   warning  'AlertCircle' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  102:9   warning  'statusDescriptions' is assigned a value but never used                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  145:26  warning  'authLoading' is assigned a value but never used                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  284:9   warning  'showEmptyState' is assigned a value but never used                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  436:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  436:29  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+  508:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  508:25  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\AuthPage.tsx
+   9:10  warning  'Separator' is defined but never used  @typescript-eslint/no-unused-vars
+  16:5   warning  'PawPrint' is defined but never used   @typescript-eslint/no-unused-vars
+  21:5   warning  'PhoneCall' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\CatCard.tsx
+  60:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  74:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\CookieConsent.tsx
+  21:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  23:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\CookieConsent.tsx:23:7
+  21 |     } catch (error) {
+  22 |       // Fallback to showing the banner if storage is unavailable
+> 23 |       setIsBannerVisible(true);
+     |       ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  24 |     }
+  25 |   }, []);
+  26 |  react-hooks/set-state-in-effect
+  34:16  warning  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ImageGallery.tsx
+  46:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\MultiImageUpload.tsx
+  198:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ReportMapOverview.tsx
+   64:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ReportMapOverview.tsx:64:5
+  62 |
+  63 |   useEffect(() => {
+> 64 |     setIsClientReady(true);
+     |     ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  65 |     return () => {
+  66 |       clearMarkers();
+  67 |       if (map) {  react-hooks/set-state-in-effect
+   90:6  warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+  104:6  warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ResponsivePicture.tsx
+  51:7  warning  This element does not support ARIA roles, states and properties. Try removing the prop 'aria-hidden'                                                                                                                                                                                     jsx-a11y/aria-unsupported-elements
+  73:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\badge.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\button.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\chart.tsx
+  62:55  warning  '_' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\form.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\navigation-menu.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\sidebar.tsx
+    1:1   error  Definition for rule 'react-refresh/only-export-components' was not found                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-refresh/only-export-components
+  537:26  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\sidebar.tsx:537:26
+  535 |   // Random width between 50 to 90%.
+  536 |   const width = React.useMemo(() => {
+> 537 |     return `${Math.floor(Math.random() * 40) + 50}%`;
+      |                          ^^^^^^^^^^^^^ Cannot call impure function
+  538 |   }, []);
+  539 |
+  540 |   return (  react-hooks/purity
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\sonner.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\toggle.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\hooks\use-toast.ts
+  15:7  warning  'actionTypes' is assigned a value but only used as a type  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\hooks\useArticles.tsx
+   87:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  115:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\hooks\useCats.tsx
+   62:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   90:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  110:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\hooks\useReports.tsx
+   33:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   74:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   79:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   84:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   90:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  100:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  112:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  133:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  159:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  174:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  215:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\lib\alerts.ts
+  27:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  55:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\lib\utils.ts
+  15:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\tailwind.config.ts
+  127:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-require-imports')
+
+✖ 88 problems (15 errors, 73 warnings)
+  0 errors and 21 warnings potentially fixable with the `--fix` option.
+

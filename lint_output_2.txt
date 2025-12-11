@@ -1,0 +1,162 @@
+
+> next-app@0.1.0 lint
+> eslint
+
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\admin\page.tsx
+    3:10  warning  'useState' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  120:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  211:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\[id]\edit\page.tsx
+    8:1   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                                                                                                                                                      @typescript-eslint/ban-ts-comment
+    9:10  warning  'Separator' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   10:1   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                                                                                                                                                      @typescript-eslint/ban-ts-comment
+   11:10  warning  'PawPrint' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   11:20  warning  'PhoneCall' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  196:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\[id]\page.tsx
+  278:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\forum\page.tsx
+  74:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\[id]\edit\page.tsx
+  15:27  warning  'Trash2' is defined but never used                                                                  @typescript-eslint/no-unused-vars
+  40:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  42:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  44:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\create\page.tsx
+  13:10  warning  'useIsAdmin' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\knowledge\page.tsx
+  16:11  warning  'user' is assigned a value but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  96:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\privacy\page.tsx
+  59:24  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\profile\ProfilePageClient.tsx
+   8:41  warning  'CardTitle' is defined but never used        @typescript-eslint/no-unused-vars
+   8:52  warning  'CardDescription' is defined but never used  @typescript-eslint/no-unused-vars
+  14:49  warning  'UserIcon' is defined but never used         @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\report\ReportPageClient.tsx
+    3:54  warning  'ReactNode' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   35:10  warning  'Badge' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   49:3   warning  'openMarkerPopup' is defined but never used                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   50:3   warning  'closeMarkerPopup' is defined but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   52:3   warning  'releaseMarkerPopup' is defined but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   54:8   warning  'ReportMapOverview' is defined but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   71:7   warning  'mapButtonClass' is assigned a value but never used                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   85:10  warning  'geoStatus' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  321:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  343:9   warning  'activeReports' is assigned a value but never used                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  722:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  746:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\app\reports\map\ReportMapClient.tsx
+   31:10  warning  'Card' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   33:10  warning  'ScrollArea' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   48:3   warning  'LocateFixed' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   54:3   warning  'Users' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   58:3   warning  'AlertCircle' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  102:9   warning  'statusDescriptions' is assigned a value but never used                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  145:26  warning  'authLoading' is assigned a value but never used                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  284:9   warning  'showEmptyState' is assigned a value but never used                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  436:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  436:29  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+  508:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  508:25  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\AuthPage.tsx
+   9:10  warning  'Separator' is defined but never used  @typescript-eslint/no-unused-vars
+  16:5   warning  'PawPrint' is defined but never used   @typescript-eslint/no-unused-vars
+  21:5   warning  'PhoneCall' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\CatCard.tsx
+  60:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  74:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\CookieConsent.tsx
+  21:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  35:16  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ImageGallery.tsx
+  46:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\MultiImageUpload.tsx
+  198:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ReportMapOverview.tsx
+   91:6  warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  105:6  warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ResponsivePicture.tsx
+  51:7  warning  This element does not support ARIA roles, states and properties. Try removing the prop 'aria-hidden'                                                                                                                                                                                     jsx-a11y/aria-unsupported-elements
+  73:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\badge.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\button.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\chart.tsx
+  62:55  warning  '_' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\form.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\navigation-menu.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\sidebar.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\sonner.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\components\ui\toggle.tsx
+  1:1  error  Definition for rule 'react-refresh/only-export-components' was not found  react-refresh/only-export-components
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\hooks\use-toast.ts
+  15:7  warning  'actionTypes' is assigned a value but only used as a type  @typescript-eslint/no-unused-vars
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\hooks\useArticles.tsx
+   87:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  115:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\hooks\useCats.tsx
+   62:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   90:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  110:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\hooks\useReports.tsx
+   33:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   74:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   79:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   84:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   90:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  100:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  112:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  133:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  159:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  174:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  215:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\lib\alerts.ts
+  27:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  55:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\src\shared\lib\utils.ts
+  15:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\ณวิธบุญยะรัตน์\Desktop\Next.js\next-app\tailwind.config.ts
+  127:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-require-imports')
+
+✖ 88 problems (9 errors, 79 warnings)
+  0 errors and 24 warnings potentially fixable with the `--fix` option.
+
