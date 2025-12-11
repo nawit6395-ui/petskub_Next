@@ -120,3 +120,21 @@ export const useUpdateArticle = () => {
     },
   });
 };
+
+export const useIncrementArticleView = () => {
+  return useMutation({
+    mutationFn: async (articleId: string) => {
+      const { error } = await supabase.rpc('increment_article_views', {
+        article_id: articleId,
+      });
+
+      if (error) throw error;
+    },
+    // We intentionally don't invalidate queries here to avoid refetching the whole article just for a +1 view count update,
+    // which would cause a visible flash or re-render. The view count is eventual consistency anyway.
+    // If real-time update is needed, we can invalidate 'knowledge_article'.
+    onError: (error) => {
+      console.error('Failed to increment view count:', error);
+    },
+  });
+};

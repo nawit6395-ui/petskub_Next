@@ -12,9 +12,10 @@ import { ArrowLeft, Calendar, User, Eye, PenSquare, Facebook, Link as LinkIcon, 
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { alert as appAlert } from "@/shared/lib/alerts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useIncrementArticleView } from "@/shared/hooks/useArticles";
 
 interface ArticleDetailClientProps {
     id: string;
@@ -54,6 +55,23 @@ const ArticleDetailClient = ({ id }: ArticleDetailClientProps) => {
             console.error("Failed to copy:", error);
         }
     };
+
+    const { mutate: incrementView } = useIncrementArticleView();
+
+    useEffect(() => {
+        if (!id) return;
+
+        const viewKey = `viewed_article_${id}`;
+        const lastViewed = localStorage.getItem(viewKey);
+        const now = new Date().getTime();
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+
+        // Check if viewed in the last 24 hours
+        if (!lastViewed || now - parseInt(lastViewed) > twentyFourHours) {
+            incrementView(id);
+            localStorage.setItem(viewKey, now.toString());
+        }
+    }, [id, incrementView]);
 
     const handleShareFacebook = () => {
         const url = encodeURIComponent(window.location.href);
