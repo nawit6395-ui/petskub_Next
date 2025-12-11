@@ -367,6 +367,7 @@ const Navbar = () => {
                 className="h-12 w-auto drop-shadow-[0_6px_18px_rgba(249,115,22,0.4)] sm:h-14 lg:h-16"
                 loading="eager"
                 priority
+                sizes="(max-width: 640px) 48px, (max-width: 1024px) 56px, 64px"
               />
               <span className="font-prompt text-xl sm:text-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 text-transparent bg-clip-text hidden lg:inline">
                 Petskub

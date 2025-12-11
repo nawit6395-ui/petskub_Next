@@ -2,6 +2,7 @@
 
 import { useCallback, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   MapPin,
@@ -719,11 +720,12 @@ const ReportPhotoDialog = ({ report }: { report: ReportType & { photo_urls: stri
           className="relative h-full w-full overflow-hidden focus-visible:outline-none bg-gray-100 group"
           aria-label="ดูภาพทั้งหมด"
         >
-          <img
+          <Image
             src={report.photo_urls[0]}
             alt={`ภาพประกอบรายงาน ${report.location}`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -743,10 +745,14 @@ const ReportPhotoDialog = ({ report }: { report: ReportType & { photo_urls: stri
           <DialogDescription>ดูรูปภาพขยายใหญ่ของรายงาน</DialogDescription>
         </DialogHeader>
         <div className="relative h-[60vh] md:h-[80vh] flex items-center justify-center">
-          <img
+          <Image
             src={report.photo_urls[activeIndex]}
             alt={`ภาพที่ ${activeIndex + 1} ของรายงาน ${report.location}`}
-            className="max-h-full max-w-full object-contain"
+            className="object-contain"
+            fill
+            sizes="100vw"
+            quality={90}
+            priority
           />
 
           <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-50">
