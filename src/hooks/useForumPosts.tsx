@@ -22,6 +22,7 @@ const SCHEMA_MISSING_CODES = new Set([
   'PGRST304',
   'PGRST305',
   'PGRST306',
+  '42703', // undefined_column (handle stale view missing new columns)
 ]);
 
 const isInteractiveSchemaMissing = (error?: PostgrestError | null) => {
@@ -147,7 +148,7 @@ const withStatsFallback = async <T,>(primary: () => Promise<T>, fallback: () => 
 const fetchPostsFromStatsView = async (category?: string, userId?: string) => {
   let query = supabase
     .from('forum_post_stats' as any)
-    .select('*')
+    .select('*, slug')
     .order('is_pinned', { ascending: false })
     .order('trend_score', { ascending: false })
     .order('created_at', { ascending: false });
@@ -280,7 +281,7 @@ const fetchPostFromBaseTable = async (postIdOrSlug: string, userId?: string) => 
 const fetchTrendingFromStatsView = async (limit: number, userId?: string) => {
   const { data, error } = await supabase
     .from('forum_post_stats' as any)
-    .select('*')
+    .select('*, slug')
     .order('trend_score', { ascending: false })
     .limit(limit);
 
