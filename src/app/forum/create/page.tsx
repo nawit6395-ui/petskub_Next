@@ -31,7 +31,27 @@ const CreateForumPostPage = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
+    const [slug, setSlug] = useState("");
     const [imageUrls, setImageUrls] = useState<string[]>([]);
+
+    // Helper to generate slug from title
+    const generateSlug = (text: string) => {
+        return text
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\u0E00-\u0E7Fa-z0-9-]/g, "") // Keep Thai chars
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "") + "-" + Math.floor(Math.random() * 1000);
+    };
+
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTitle = e.target.value;
+        setTitle(newTitle);
+        // Auto-update slug only if it looks like it was auto-generated or empty
+        // For simplicity in this iteration, we always update slug if user hasn't heavily customized it (checking matching naive logic is hard), 
+        // OR we just simply update it. User requested "Auto" so real-time update is best.
+        setSlug(generateSlug(newTitle));
+    };
 
     if (authLoading) {
         return (
@@ -58,19 +78,10 @@ const CreateForumPostPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!title || !content || !category) {
+        if (!title || !content || !category || !slug) {
             alert.error("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
-
-        // Auto-generate slug from title
-        const slug = title
-            .toLowerCase()
-            .replace(/ /g, "-")
-            .replace(/[^\u0E00-\u0E7Fa-z0-9-]/g, "") // Keep Thai chars, English, numbers, hyphens
-            .replace(/-+/g, "-") // Collapse detailed hyphens
-            .replace(/^-|-$/g, "") // Trim hyphens
-            + "-" + Math.floor(Math.random() * 10000); // Add random number to ensure uniqueness easily
 
         try {
             await createPost.mutateAsync({
@@ -113,7 +124,7 @@ const CreateForumPostPage = () => {
                             <Input
                                 id="title"
                                 value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                onChange={handleTitleChange}
                                 placeholder="เช่น อยากทราบวิธีฝึกสุนัขให้ขับถ่ายเป็นที่..."
                                 className="font-prompt h-12 text-lg rounded-xl bg-white/50 focus:bg-white transition-all"
                                 required
