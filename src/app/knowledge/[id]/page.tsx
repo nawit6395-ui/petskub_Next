@@ -61,15 +61,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         : "อ่านบทความน่ารู้เกี่ยวกับสัตว์เลี้ยงที่ PetsKub";
 
     const images = article.image_url ? [article.image_url] : [];
+    const canonicalUrl = `https://petskub.com/knowledge/${id}`;
 
     return {
         title,
         description,
+        alternates: {
+            canonical: canonicalUrl,
+        },
         openGraph: {
             title,
             description,
             images,
             type: "article",
+            url: canonicalUrl,
         },
         twitter: {
             card: "summary_large_image",
@@ -82,5 +87,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticlePage({ params }: PageProps) {
     const { id } = await params;
-    return <ArticleDetailClient id={id} />;
+    const article = await getArticle(id);
+
+    // JSON-LD Schema
+    const jsonLd = article ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": article.title,
+        "image": article.image_url ? [article.image_url] : [],
+        "datePublished": article.created_at,
+        "dateModified": article.updated_at || article.created_at,
+        "author": [{
+            "@type": "Organization",
+            "name": "PetsKub Community",
+            "url": "https://petskub.com"
+        }],
+        "publisher": {
+            "@type": "Organization",
+            "name": "PetsKub",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://petskub.com/Logo.png"
+            }
+        },
+        "description": article.content ? article.content.substring(0, 150) : "บทความจาก PetsKub"
+    } : null;
+
+    return (
+        <>
+            {jsonLd && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
+            )}
+            <ArticleDetailClient id={id} />
+        </>
+    );
 }

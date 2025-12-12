@@ -82,6 +82,8 @@ export const metadata: Metadata = {
 
 export const viewport = {
   themeColor: "#f4a259",
+  width: "device-width",
+  initialScale: 1,
 };
 
 const organizationJsonLd = {

@@ -1,86 +1,101 @@
 import { MetadataRoute } from "next";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://petskub.com";
-  return [
+const baseUrl = "https://petskub.com";
+
+// Helper to fetch IDs/Slugs from Supabase
+async function fetchSupabaseData(table: string, select = "id, slug") {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) return [];
+
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/${table}?select=${select}&order=created_at.desc`, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+      next: { revalidate: 3600 }, // Revalidate every hour
+    });
+
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (error) {
+    console.error(`Error fetching sitemap data for ${table}:`, error);
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // 1. Static Routes
+  const routes: MetadataRoute.Sitemap = [
     {
-      url: `${base}/`,
+      url: `${baseUrl}/`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${base}/adopt`,
+      url: `${baseUrl}/adopt`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/knowledge`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/forum`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
     },
     {
-      url: `${base}/report`,
+      url: `${baseUrl}/report`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'always',
+      priority: 0.9,
     },
     {
-      url: `${base}/reports/map`,
+      url: `${baseUrl}/reports/map`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'always',
+      priority: 0.9,
     },
     {
-      url: `${base}/knowledge`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${base}/forum`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${base}/add-cat`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${base}/add-urgent-case`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${base}/success-stories`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${base}/help`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${base}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${base}/login`,
+      url: `${baseUrl}/login`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.4,
     },
     {
-      url: `${base}/register`,
+      url: `${baseUrl}/register`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.4,
     },
-    // Future dynamic routes: /forum/[id], /knowledge/[id]
   ];
+
+  // 2. Dynamic Knowledge Articles
+  const articles = await fetchSupabaseData("knowledge_articles", "id, slug");
+  const articleRoutes: MetadataRoute.Sitemap = articles.map((item: any) => ({
+    url: `${baseUrl}/knowledge/${item.slug || item.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  // 3. Dynamic Forum Posts
+  const forums = await fetchSupabaseData("forum_posts", "id"); // Forum might not have slug? Check schema if needed, assuming id for now or consistent with article
+  const forumRoutes: MetadataRoute.Sitemap = forums.map((item: any) => ({
+    url: `${baseUrl}/forum/${item.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.6,
+  }));
+
+  return [...routes, ...articleRoutes, ...forumRoutes];
 }

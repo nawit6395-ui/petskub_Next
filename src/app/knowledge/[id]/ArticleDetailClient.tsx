@@ -30,7 +30,7 @@ const MarkdownImage = (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
                 src={src}
-                alt={alt || "Article Image"}
+                alt={alt || ""} // Empty alt for decorative if no text provided
                 className="w-full h-auto object-cover"
                 loading="lazy"
             />
