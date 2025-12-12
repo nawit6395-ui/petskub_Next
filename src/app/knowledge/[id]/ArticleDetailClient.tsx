@@ -133,22 +133,22 @@ const ArticleDetailClient = ({ id }: ArticleDetailClientProps) => {
                         <Button
                             variant="destructive"
                             className="font-prompt gap-2 ml-2 bg-red-500 hover:bg-red-600 text-white shadow-sm"
-                            onClick={() => {
-                                alert.confirm("คุณแน่ใจหรือไม่?", {
+                            onClick={async () => {
+                                const result = await alert.confirm("คุณแน่ใจหรือไม่?", {
                                     description: "บทความที่ถูกลบจะไม่สามารถกู้คืนได้",
-                                    confirmLabel: "ลบบทความ",
-                                    cancelLabel: "ยกเลิก",
-                                    onConfirm: async () => {
-                                        try {
-                                            await deleteArticle.mutateAsync(article.id);
-                                            alert.success("ลบบทความเรียบร้อยแล้ว");
-                                            router.push("/knowledge");
-                                        } catch (error) {
-                                            console.error(error);
-                                        }
-                                    },
-                                    variant: "destructive"
+                                    confirmText: "ลบบทความ",
+                                    cancelText: "ยกเลิก",
                                 });
+
+                                if (result.isConfirmed) {
+                                    try {
+                                        await deleteArticle.mutateAsync(article.id);
+                                        alert.success("ลบบทความเรียบร้อยแล้ว");
+                                        router.push("/knowledge");
+                                    } catch (error) {
+                                        console.error(error);
+                                    }
+                                }
                             }}
                         >
                             <Trash2 className="w-4 h-4" />

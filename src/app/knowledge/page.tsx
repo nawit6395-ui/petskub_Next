@@ -146,21 +146,21 @@ const KnowledgePage = () => {
                           variant="destructive"
                           size="sm"
                           className="font-prompt gap-1 bg-red-100 text-red-600 hover:bg-red-200 border border-red-200"
-                          onClick={() => {
-                            alert.confirm("คุณแน่ใจหรือไม่?", {
+                          onClick={async () => {
+                            const result = await alert.confirm("คุณแน่ใจหรือไม่?", {
                               description: "บทความที่ถูกลบจะไม่สามารถกู้คืนได้",
-                              confirmLabel: "ลบบทความ",
-                              cancelLabel: "ยกเลิก",
-                              onConfirm: async () => {
-                                try {
-                                  await deleteArticle.mutateAsync(article.id);
-                                  alert.success("ลบบทความเรียบร้อยแล้ว");
-                                } catch (error) {
-                                  console.error(error);
-                                }
-                              },
-                              variant: "destructive"
+                              confirmText: "ลบบทความ",
+                              cancelText: "ยกเลิก",
                             });
+
+                            if (result.isConfirmed) {
+                              try {
+                                await deleteArticle.mutateAsync(article.id);
+                                alert.success("ลบบทความเรียบร้อยแล้ว");
+                              } catch (error) {
+                                console.error(error);
+                              }
+                            }
                           }}
                         >
                           <Trash2 className="w-4 h-4" />

@@ -247,23 +247,23 @@ const EditArticlePage = ({ params }: PageProps) => {
                                 type="button"
                                 variant="destructive"
                                 className="font-prompt h-11 px-6 gap-2 bg-red-100 text-red-600 hover:bg-red-200 border border-red-200 mr-auto"
-                                onClick={() => {
-                                    alert.confirm("คุณแน่ใจหรือไม่?", {
+                                onClick={async () => {
+                                    const result = await alert.confirm("คุณแน่ใจหรือไม่?", {
                                         description: "บทความที่ถูกลบจะไม่สามารถกู้คืนได้",
-                                        confirmLabel: "ลบบทความ",
-                                        cancelLabel: "ยกเลิก",
-                                        onConfirm: async () => {
-                                            try {
-                                                if (!article) return;
-                                                await deleteArticle.mutateAsync(article.id);
-                                                alert.success("ลบบทความเรียบร้อยแล้ว");
-                                                router.push("/knowledge");
-                                            } catch (error) {
-                                                console.error(error);
-                                            }
-                                        },
-                                        variant: "destructive"
+                                        confirmText: "ลบบทความ",
+                                        cancelText: "ยกเลิก",
                                     });
+
+                                    if (result.isConfirmed) {
+                                        try {
+                                            if (!article) return;
+                                            await deleteArticle.mutateAsync(article.id);
+                                            alert.success("ลบบทความเรียบร้อยแล้ว");
+                                            router.push("/knowledge");
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
+                                    }
                                 }}
                             >
                                 <Trash2 className="w-5 h-5" />
