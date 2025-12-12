@@ -113,12 +113,11 @@ const ArticleDetailClient = ({ id }: ArticleDetailClientProps) => {
                 {/* Navigation and Actions */}
                 <div className="flex items-center justify-between mb-8">
                     <Button
-                        variant="ghost"
-                        className="font-prompt gap-2 text-muted-foreground hover:text-foreground pl-0"
+                        className="font-prompt gap-1.5 text-white bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300 px-4 py-1.5 border-none h-auto"
                         onClick={() => router.push("/knowledge")}
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        ย้อนกลับ
+                        <span className="text-sm font-bold tracking-wide">ย้อนกลับ</span>
                     </Button>
 
                     {isAdmin && (
@@ -225,6 +224,22 @@ const ArticleDetailClient = ({ id }: ArticleDetailClientProps) => {
                             >
                                 {article.content}
                             </ReactMarkdown>
+                        </div>
+
+                        {/* Bottom Back Button */}
+                        <div className="flex justify-start mt-10">
+                            <button
+                                onClick={() => router.push("/knowledge")}
+                                className="transition-transform hover:scale-110 active:scale-95 duration-200 opacity-80 hover:opacity-100"
+                            >
+                                <Image
+                                    src="/images/article-bottom-back.png"
+                                    alt="ย้อนกลับ"
+                                    width={48}
+                                    height={48}
+                                    className="w-12 h-12 object-contain drop-shadow-md"
+                                />
+                            </button>
                         </div>
                     </article>
 
