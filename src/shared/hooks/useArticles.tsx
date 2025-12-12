@@ -133,8 +133,27 @@ export const useIncrementArticleView = () => {
     // We intentionally don't invalidate queries here to avoid refetching the whole article just for a +1 view count update,
     // which would cause a visible flash or re-render. The view count is eventual consistency anyway.
     // If real-time update is needed, we can invalidate 'knowledge_article'.
-    onError: (error) => {
-      console.error('Failed to increment view count:', error);
+    console.error('Failed to increment view count:', error);
+  },
+  });
+};
+
+export const useCheckSlugAvailability = () => {
+  return useMutation({
+    mutationFn: async ({ slug, excludeId }: { slug: string; excludeId?: string }) => {
+      let query = supabase
+        .from('knowledge_articles')
+        .select('*', { count: 'exact', head: true })
+        .eq('slug', slug);
+
+      if (excludeId) {
+        query = query.neq('id', excludeId);
+      }
+
+      const { count, error } = await query;
+
+      if (error) throw error;
+      return count ? count > 0 : false;
     },
   });
 };

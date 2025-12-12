@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useArticle, useUpdateArticle } from "@/shared/hooks/useArticles";
+import { useArticle, useUpdateArticle, useCheckSlugAvailability } from "@/shared/hooks/useArticles";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { alert } from "@/lib/alerts";
@@ -28,9 +28,12 @@ const EditArticlePage = ({ params }: PageProps) => {
     const isAdmin = useIsAdmin();
     const { data: article, isLoading } = useArticle(id);
     const updateArticle = useUpdateArticle();
+    const checkSlug = useCheckSlugAvailability();
 
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
+    const [slugError, setSlugError] = useState("");
+    const [isCheckingSlug, setIsCheckingSlug] = useState(false);
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
     const [imageUrl, setImageUrl] = useState("");
@@ -49,6 +52,40 @@ const EditArticlePage = ({ params }: PageProps) => {
             setImageUrl(article.image_url || "");
         }
     }, [article]);
+
+    useEffect(() => {
+        const checkSlugAvailability = async () => {
+            if (!slug || !article) {
+                setSlugError("");
+                setIsCheckingSlug(false);
+                return;
+            }
+
+            // Don't check if the slug hasn't changed from original
+            if (slug === article.slug) {
+                setSlugError("");
+                setIsCheckingSlug(false);
+                return;
+            }
+
+            setIsCheckingSlug(true);
+            try {
+                const isTaken = await checkSlug.mutateAsync({ slug, excludeId: article.id });
+                if (isTaken) {
+                    setSlugError("Slug นี้ถูกใช้ไปแล้ว กรุณาเปลี่ยนใหม่");
+                } else {
+                    setSlugError("");
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsCheckingSlug(false);
+            }
+        };
+
+        const timeoutId = setTimeout(checkSlugAvailability, 800);
+        return () => clearTimeout(timeoutId);
+    }, [slug, article]);
 
     const categories = ["การดูแล", "สุขภาพ", "รับเลี้ยง", "โภชนาการ", "พฤติกรรม"];
 
@@ -79,6 +116,11 @@ const EditArticlePage = ({ params }: PageProps) => {
 
         if (!title || !content || !category || !slug) {
             alert.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+            return;
+        }
+
+        if (slugError || isCheckingSlug) {
+            alert.error(slugError || "กำลังตรวจสอบ Slug...");
             return;
         }
 
