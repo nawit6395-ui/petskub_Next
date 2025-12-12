@@ -133,8 +133,9 @@ export const useIncrementArticleView = () => {
     // We intentionally don't invalidate queries here to avoid refetching the whole article just for a +1 view count update,
     // which would cause a visible flash or re-render. The view count is eventual consistency anyway.
     // If real-time update is needed, we can invalidate 'knowledge_article'.
-    console.error('Failed to increment view count:', error);
-  },
+    onError: (error) => {
+      console.error('Failed to increment view count:', error);
+    },
   });
 };
 
