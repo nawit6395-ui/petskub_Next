@@ -116,7 +116,7 @@ const ForumPage = () => {
           <CardContent>
             <div className="flex gap-4 overflow-x-auto pb-2">
               {trendingPosts.map((post) => (
-                <Link key={post.id} href={`/forum/${post.id}`} className="min-w-[240px]">
+                <Link key={post.id} href={`/forum/${post.slug || post.id}`} className="min-w-[240px]">
                   <div className="rounded-2xl border border-primary/20 bg-white/70 p-4 shadow-card transition hover:-translate-y-1 hover:shadow-lg">
                     <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <Badge className="bg-primary/10 text-primary">
@@ -167,7 +167,7 @@ const ForumPage = () => {
           ) : posts && posts.length > 0 ? (
             <div className="space-y-4">
               {posts.map((post) => (
-                <Link key={post.id} href={`/forum/${post.id}`}>
+                <Link key={post.id} href={`/forum/${post.slug || post.id}`}>
                   <Card className="transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg">
                     <CardHeader className="pb-3">
                       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">

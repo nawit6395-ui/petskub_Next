@@ -93,8 +93,8 @@ const CreateForumPostPage = () => {
                 slug,
             });
 
-            // Redirect is handled by logic, but for safety:
-            router.push("/forum");
+            // Redirect to the new post
+            router.push(`/forum/${slug}`);
         } catch (error) {
             console.error(error);
         }
