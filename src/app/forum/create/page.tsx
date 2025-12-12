@@ -63,6 +63,15 @@ const CreateForumPostPage = () => {
             return;
         }
 
+        // Auto-generate slug from title
+        const slug = title
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\u0E00-\u0E7Fa-z0-9-]/g, "") // Keep Thai chars, English, numbers, hyphens
+            .replace(/-+/g, "-") // Collapse detailed hyphens
+            .replace(/^-|-$/g, "") // Trim hyphens
+            + "-" + Math.floor(Math.random() * 10000); // Add random number to ensure uniqueness easily
+
         try {
             await createPost.mutateAsync({
                 title,
@@ -70,6 +79,7 @@ const CreateForumPostPage = () => {
                 category,
                 user_id: user.id,
                 image_urls: imageUrls,
+                slug,
             });
 
             // Redirect is handled by logic, but for safety:
@@ -109,6 +119,8 @@ const CreateForumPostPage = () => {
                                 required
                             />
                         </div>
+
+                        {/* Slug (Auto-generated/Hidden or editable?) - Requirement: "Auto". I'll make it derived in handleSubmit for now or just hidden. Valid SEO often implies editable. I'll stick to auto-generation on submit to keep UI simple as requested "can you make it auto?" */}
 
                         <div className="space-y-2">
                             <Label htmlFor="category" className="font-prompt text-base font-semibold">หมวดหมู่ <span className="text-red-500">*</span></Label>

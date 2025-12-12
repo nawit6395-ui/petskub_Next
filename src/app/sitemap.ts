@@ -89,9 +89,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // 3. Dynamic Forum Posts
-  const forums = await fetchSupabaseData("forum_posts", "id"); // Forum might not have slug? Check schema if needed, assuming id for now or consistent with article
+  const forums = await fetchSupabaseData("forum_posts", "id, slug");
   const forumRoutes: MetadataRoute.Sitemap = forums.map((item: any) => ({
-    url: `${baseUrl}/forum/${item.id}`,
+    url: `${baseUrl}/forum/${item.slug || item.id}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
     priority: 0.6,

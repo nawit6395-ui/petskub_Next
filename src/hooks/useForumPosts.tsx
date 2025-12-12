@@ -219,11 +219,14 @@ const fetchPostsFromBaseTable = async (category?: string, userId?: string) => {
   );
 };
 
-const fetchPostFromStatsView = async (postId: string, userId?: string) => {
+const isUuid = (text: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(text);
+
+const fetchPostFromStatsView = async (postIdOrSlug: string, userId?: string) => {
+  const column = isUuid(postIdOrSlug) ? 'id' : 'slug';
   const { data, error } = await supabase
     .from('forum_post_stats' as any)
     .select('*')
-    .eq('id', postId)
+    .eq(column, postIdOrSlug)
     .single();
 
   if (error) throw error;
@@ -231,30 +234,34 @@ const fetchPostFromStatsView = async (postId: string, userId?: string) => {
   const post = normalizeStats(data);
   const [profile, isLiked] = await Promise.all([
     fetchProfile(post.user_id),
-    fetchIsLiked(postId, userId),
+    fetchIsLiked(post.id, userId),
   ]);
 
   return { ...post, profiles: profile, is_liked: isLiked } as ForumPost;
 };
 
-const fetchPostFromBaseTable = async (postId: string, userId?: string) => {
+const fetchPostFromBaseTable = async (postIdOrSlug: string, userId?: string) => {
+  const column = isUuid(postIdOrSlug) ? 'id' : 'slug';
   const { data, error } = await supabase
     .from('forum_posts')
     .select('*')
-    .eq('id', postId)
+    .eq(column, postIdOrSlug)
     .single();
 
   if (error) throw error;
 
+  // If we fetched by slug, we now have the real ID in data.id
+  const realId = data.id;
+
   const [commentCounts, likeCounts, profile, isLiked] = await Promise.all([
-    fetchCounts('forum_comments', [postId]),
-    fetchCounts('forum_post_reactions', [postId], { ignoreMissing: true }),
+    fetchCounts('forum_comments', [realId]),
+    fetchCounts('forum_post_reactions', [realId], { ignoreMissing: true }),
     fetchProfile(data.user_id),
-    fetchIsLiked(postId, userId),
+    fetchIsLiked(realId, userId),
   ]);
 
-  const likeCount = likeCounts[postId] ?? 0;
-  const commentCount = commentCounts[postId] ?? 0;
+  const likeCount = likeCounts[realId] ?? 0;
+  const commentCount = commentCounts[realId] ?? 0;
 
   return {
     ...data,
@@ -350,6 +357,7 @@ export interface ForumPost {
   title: string;
   content: string;
   category: string;
+  slug?: string;
   image_urls?: string[];
   views: number;
   is_pinned: boolean;
@@ -393,7 +401,7 @@ export const useForumPost = (
       );
 
       if (!options?.skipViewIncrement) {
-        await incrementPostViews(postId, Number(post.views ?? 0));
+        await incrementPostViews(post.id, Number(post.views ?? 0));
       }
 
       return post;
@@ -411,6 +419,7 @@ export const useCreatePost = () => {
       category: string;
       user_id: string;
       image_urls?: string[];
+      slug: string;
     }) => {
       const payload = {
         ...newPost,

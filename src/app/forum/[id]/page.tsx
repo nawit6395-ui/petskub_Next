@@ -70,7 +70,8 @@ const ForumPostPage = () => {
   const isAdmin = useIsAdmin();
 
   const { data: post, isLoading: postLoading } = useForumPost(id!, { userId: user?.id });
-  const { data: comments, isLoading: commentsLoading } = useForumComments(id!);
+  // Use post.id if available, otherwise empty string (will be disabled until loaded)
+  const { data: comments, isLoading: commentsLoading } = useForumComments(post?.id ?? "");
   const createComment = useCreateComment();
   const deletePost = useDeletePost();
   const toggleReaction = useTogglePostReaction();
@@ -89,6 +90,8 @@ const ForumPostPage = () => {
       return;
     }
 
+    if (!post) return; // Should not happen due to loading check
+
     const parsed = commentSchema.safeParse({ content: commentContent });
     if (!parsed.success) {
       alert.error(parsed.error.issues[0]?.message ?? "กรุณาใส่ความคิดเห็น");
@@ -97,7 +100,7 @@ const ForumPostPage = () => {
 
     createComment.mutate(
       {
-        post_id: id!,
+        post_id: post.id,
         content: commentContent,
         user_id: user.id,
       },
@@ -108,14 +111,15 @@ const ForumPostPage = () => {
   };
 
   const handleDeletePost = () => {
-    if (!id) return;
-    deletePost.mutate(id, {
+    if (!post) return;
+    deletePost.mutate(post.id, {
       onSuccess: () => router.push("/forum"),
     });
   };
 
   const handleDeleteComment = (commentId: string) => {
-    deleteComment.mutate({ commentId, postId: id! });
+    if (!post) return;
+    deleteComment.mutate({ commentId, postId: post.id });
   };
 
   const handleToggleLike = () => {
