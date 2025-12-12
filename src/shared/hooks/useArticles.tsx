@@ -139,6 +139,30 @@ export const useIncrementArticleView = () => {
   });
 };
 
+export const useDeleteArticle = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('knowledge_articles')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge_articles'] });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      alert.error('เกิดข้อผิดพลาด', {
+        description: error.message,
+      });
+    },
+  });
+};
+
 export const useCheckSlugAvailability = () => {
   return useMutation({
     mutationFn: async ({ slug, excludeId }: { slug: string; excludeId?: string }) => {

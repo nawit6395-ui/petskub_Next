@@ -7,16 +7,18 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, BookOpen, Plus, PenSquare } from "lucide-react";
-import { useArticles } from "@/shared/hooks/useArticles";
+import { Search, BookOpen, Plus, PenSquare, Trash2 } from "lucide-react";
+import { useArticles, useDeleteArticle } from "@/shared/hooks/useArticles";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useUserRole";
+import { alert } from "@/lib/alerts";
 
 const KnowledgePage = () => {
   const { user } = useAuth();
   const router = useRouter();
   const isAdmin = useIsAdmin();
   const { data: articles, isLoading } = useArticles();
+  const deleteArticle = useDeleteArticle();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
 
@@ -137,6 +139,31 @@ const KnowledgePage = () => {
                           <Link href={`/knowledge/${article.id}/edit`}>
                             <PenSquare className="w-4 h-4" /> แก้ไข
                           </Link>
+                        </Button>
+                      )}
+                      {isAdmin && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="font-prompt gap-1 bg-red-100 text-red-600 hover:bg-red-200 border border-red-200"
+                          onClick={() => {
+                            alert.confirm("คุณแน่ใจหรือไม่?", {
+                              description: "บทความที่ถูกลบจะไม่สามารถกู้คืนได้",
+                              confirmLabel: "ลบบทความ",
+                              cancelLabel: "ยกเลิก",
+                              onConfirm: async () => {
+                                try {
+                                  await deleteArticle.mutateAsync(article.id);
+                                  alert.success("ลบบทความเรียบร้อยแล้ว");
+                                } catch (error) {
+                                  console.error(error);
+                                }
+                              },
+                              variant: "destructive"
+                            });
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       )}
                       <Button

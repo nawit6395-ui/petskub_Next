@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useArticle, useUpdateArticle, useCheckSlugAvailability } from "@/shared/hooks/useArticles";
+import { useArticle, useUpdateArticle, useCheckSlugAvailability, useDeleteArticle } from "@/shared/hooks/useArticles";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { alert } from "@/lib/alerts";
@@ -29,6 +29,7 @@ const EditArticlePage = ({ params }: PageProps) => {
     const { data: article, isLoading } = useArticle(id);
     const updateArticle = useUpdateArticle();
     const checkSlug = useCheckSlugAvailability();
+    const deleteArticle = useDeleteArticle();
 
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
@@ -242,6 +243,32 @@ const EditArticlePage = ({ params }: PageProps) => {
                         </div>
 
                         <div className="flex justify-end gap-3 pt-4 border-t">
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                className="font-prompt h-11 px-6 gap-2 bg-red-100 text-red-600 hover:bg-red-200 border border-red-200 mr-auto"
+                                onClick={() => {
+                                    alert.confirm("คุณแน่ใจหรือไม่?", {
+                                        description: "บทความที่ถูกลบจะไม่สามารถกู้คืนได้",
+                                        confirmLabel: "ลบบทความ",
+                                        cancelLabel: "ยกเลิก",
+                                        onConfirm: async () => {
+                                            try {
+                                                if (!article) return;
+                                                await deleteArticle.mutateAsync(article.id);
+                                                alert.success("ลบบทความเรียบร้อยแล้ว");
+                                                router.push("/knowledge");
+                                            } catch (error) {
+                                                console.error(error);
+                                            }
+                                        },
+                                        variant: "destructive"
+                                    });
+                                }}
+                            >
+                                <Trash2 className="w-5 h-5" />
+                                ลบบทความ
+                            </Button>
                             <Link href={`/knowledge/${id}`}>
                                 <Button variant="outline" type="button" className="font-prompt h-11 px-6">
                                     ยกเลิก
