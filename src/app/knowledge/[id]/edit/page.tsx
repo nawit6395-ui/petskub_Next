@@ -30,6 +30,7 @@ const EditArticlePage = ({ params }: PageProps) => {
     const updateArticle = useUpdateArticle();
 
     const [title, setTitle] = useState("");
+    const [slug, setSlug] = useState("");
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
     const [imageUrl, setImageUrl] = useState("");
@@ -38,6 +39,8 @@ const EditArticlePage = ({ params }: PageProps) => {
         if (article) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setTitle(article.title);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSlug(article.slug || "");
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setContent(article.content);
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -74,7 +77,7 @@ const EditArticlePage = ({ params }: PageProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!title || !content || !category) {
+        if (!title || !content || !category || !slug) {
             alert.error("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
@@ -85,6 +88,7 @@ const EditArticlePage = ({ params }: PageProps) => {
             await updateArticle.mutateAsync({
                 id: article.id,
                 title,
+                slug,
                 content,
                 category,
                 image_url: imageUrl || undefined,
@@ -124,11 +128,34 @@ const EditArticlePage = ({ params }: PageProps) => {
                             <Input
                                 id="title"
                                 value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                onChange={(e) => {
+                                    setTitle(e.target.value);
+                                    if (!slug) {
+                                        setSlug(e.target.value.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\u0E00-\u0E7F\-]+/g, ''));
+                                    }
+                                }}
                                 placeholder="เช่น วิธีดูแลแมวเด็ก..."
                                 className="font-prompt h-12 text-lg"
                                 required
                             />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="slug" className="font-prompt">URL Slug (สำหรับ SEO) *</Label>
+                            <div className="flex items-center gap-2">
+                                <span className="text-muted-foreground text-sm">https://petskub.com/knowledge/</span>
+                                <Input
+                                    id="slug"
+                                    value={slug}
+                                    onChange={(e) => setSlug(e.target.value.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\u0E00-\u0E7F\-]+/g, ''))}
+                                    placeholder="care-for-cats"
+                                    className="font-prompt h-11"
+                                    required
+                                />
+                            </div>
+                            <p className="text-xs text-muted-foreground font-prompt">
+                                ชื่อลิงก์ภาษาอังกฤษหรือไทย (แนะนำภาษาอังกฤษ) ใช้ขีด (-) แทนวรรค
+                            </p>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-6">

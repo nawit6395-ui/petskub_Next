@@ -22,6 +22,7 @@ const CreateArticlePage = () => {
     const createArticle = useCreateArticle();
 
     const [title, setTitle] = useState("เริ่มต้นเลี้ยงสัตว์อย่างมืออาชีพ: คู่มือเตรียมตัวและเช็คลิสต์ที่ต้องรู้");
+    const [slug, setSlug] = useState("");
     const [content, setContent] = useState(`# คู่มือมือใหม่: เตรียมตัวอย่างไรเมื่อคิดจะ "รับเลี้ยงสัตว์จร" 🐶🐱
 
 ![ภาพปก: ความสุขของการรับเลี้ยงสัตว์](/images/articles/adopt-cover.png)
@@ -87,21 +88,6 @@ const CreateArticlePage = () => {
 
     const categories = ["การดูแล", "สุขภาพ", "รับเลี้ยง", "โภชนาการ", "พฤติกรรม"];
 
-    // Bypass admin check for this session as per user request
-    // if (!user || !isAdmin) {
-    //     return (
-    //         <div className="min-h-screen bg-background py-16 flex items-center justify-center">
-    //             <Card className="p-8 text-center max-w-md">
-    //                 <h2 className="text-xl font-bold font-prompt mb-4">ไม่มีสิทธิ์เข้าถึง</h2>
-    //                 <p className="text-muted-foreground font-prompt mb-6">คุณไม่มีสิทธิ์ในการสร้างบทความ</p>
-    //                 <Link href="/knowledge">
-    //                     <Button className="font-prompt">กลับสู่หน้าความรู้</Button>
-    //                 </Link>
-    //             </Card>
-    //         </div>
-    //     );
-    // }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -110,7 +96,7 @@ const CreateArticlePage = () => {
             return;
         }
 
-        if (!title || !content || !category) {
+        if (!title || !content || !category || !slug) {
             alert.error("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
@@ -118,6 +104,7 @@ const CreateArticlePage = () => {
         try {
             await createArticle.mutateAsync({
                 title,
+                slug,
                 content,
                 category,
                 image_url: imageUrl || undefined,
@@ -156,11 +143,34 @@ const CreateArticlePage = () => {
                             <Input
                                 id="title"
                                 value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                onChange={(e) => {
+                                    setTitle(e.target.value);
+                                    if (!slug || slug === title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\u0E00-\u0E7F\-]+/g, '')) {
+                                        setSlug(e.target.value.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\u0E00-\u0E7F\-]+/g, ''));
+                                    }
+                                }}
                                 placeholder="เช่น วิธีดูแลแมวเด็ก..."
                                 className="font-prompt h-12 text-lg"
                                 required
                             />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="slug" className="font-prompt">URL Slug (สำหรับ SEO) *</Label>
+                            <div className="flex items-center gap-2">
+                                <span className="text-muted-foreground text-sm">https://petskub.com/knowledge/</span>
+                                <Input
+                                    id="slug"
+                                    value={slug}
+                                    onChange={(e) => setSlug(e.target.value.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\u0E00-\u0E7F\-]+/g, ''))}
+                                    placeholder="care-for-cats"
+                                    className="font-prompt h-11"
+                                    required
+                                />
+                            </div>
+                            <p className="text-xs text-muted-foreground font-prompt">
+                                ชื่อลิงก์ภาษาอังกฤษหรือไทย (แนะนำภาษาอังกฤษ) ใช้ขีด (-) แทนวรรค
+                            </p>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-6">
