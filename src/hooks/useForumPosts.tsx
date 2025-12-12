@@ -226,7 +226,7 @@ const fetchPostFromStatsView = async (postIdOrSlug: string, userId?: string) => 
   const column = isUuid(postIdOrSlug) ? 'id' : 'slug';
   const { data, error } = await supabase
     .from('forum_post_stats' as any)
-    .select('*')
+    .select('*, slug') // Force checking slug column
     .eq(column, postIdOrSlug)
     .single();
 

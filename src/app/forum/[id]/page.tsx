@@ -65,11 +65,12 @@ const categories: Record<string, string> = {
 
 const ForumPostPage = () => {
   const { id } = useParams<{ id: string }>();
+  const decodedId = id ? decodeURIComponent(id) : undefined;
   const router = useRouter();
   const { user } = useAuth();
   const isAdmin = useIsAdmin();
 
-  const { data: post, isLoading: postLoading } = useForumPost(id!, { userId: user?.id });
+  const { data: post, isLoading: postLoading } = useForumPost(decodedId, { userId: user?.id });
   // Use post.id if available, otherwise empty string (will be disabled until loaded)
   const { data: comments, isLoading: commentsLoading } = useForumComments(post?.id ?? "");
   const createComment = useCreateComment();
