@@ -227,13 +227,13 @@ function AuthPageContent() {
     };
 
     // Derived State for UI Theme
-    const themeColor = isLogin ? "bg-[#F97316]" : "bg-[#10B981]"; // Orange : Emerald
+    const themeColor = isLogin ? "bg-[#F59E0B]" : "bg-[#65A30D]"; // Amber : Lime
     const themeGradient = isLogin
-        ? "from-orange-400 to-orange-600"
-        : "from-emerald-400 to-emerald-600";
+        ? "from-amber-400 to-amber-600"
+        : "from-lime-500 to-lime-700";
     const buttonColor = isLogin
-        ? "bg-[#F97316] hover:bg-[#EA580C]"
-        : "bg-[#10B981] hover:bg-[#059669]";
+        ? "bg-[#F59E0B] hover:bg-[#D97706]"
+        : "bg-[#65A30D] hover:bg-[#4D7C0F]";
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-[#FDF8F6] p-4 font-prompt">
@@ -256,7 +256,7 @@ function AuthPageContent() {
                             />
                             <span className={cn(
                                 "font-bold tracking-widest text-sm",
-                                isLogin ? "text-[#F97316]" : "text-[#10B981]"
+                                isLogin ? "text-[#F59E0B]" : "text-[#65A30D]"
                             )}>PETSKUB</span>
                         </div>
 
@@ -355,7 +355,7 @@ function AuthPageContent() {
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             {signupSuccess && (
-                                <div className="p-3 bg-emerald-50 text-emerald-700 text-sm rounded-xl font-medium flex items-center gap-2">
+                                <div className="p-3 bg-lime-50 text-lime-700 text-sm rounded-xl font-medium flex items-center gap-2">
                                     <Check className="w-4 h-4" />
                                     {signupSuccess}
                                 </div>
@@ -399,7 +399,7 @@ function AuthPageContent() {
                                         <button
                                             type="button"
                                             onClick={handleForgotPasswordClick}
-                                            className="text-xs font-semibold text-[#F97316] hover:underline"
+                                            className="text-xs font-semibold text-[#F59E0B] hover:underline"
                                         >
                                             ลืมรหัสผ่าน?
                                         </button>
@@ -438,7 +438,8 @@ function AuthPageContent() {
                             <Button
                                 type="submit"
                                 className={cn(
-                                    "w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02]",
+                                    "w-full h-12 rounded-xl text-base font-bold shadow-lg transition-all hover:scale-[1.02]",
+                                    isLogin ? "shadow-amber-500/20" : "shadow-lime-600/20",
                                     buttonColor
                                 )}
                             >
@@ -454,7 +455,7 @@ function AuthPageContent() {
                                     setIsLogin(!isLogin);
                                     setErrors({});
                                 }}
-                                className={cn("font-bold hover:underline", isLogin ? "text-[#F97316]" : "text-[#10B981]")}
+                                className={cn("font-bold hover:underline", isLogin ? "text-[#F59E0B]" : "text-[#65A30D]")}
                             >
                                 {isLogin ? "สมัครสมาชิกเลย" : "เข้าสู่ระบบ"}
                             </button>
