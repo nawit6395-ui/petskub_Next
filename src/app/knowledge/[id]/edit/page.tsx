@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect */
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,8 +13,9 @@ import { useArticle, useUpdateArticle, useCheckSlugAvailability, useDeleteArticl
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { alert } from "@/lib/alerts";
-import { ArrowLeft, Save, Trash2, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Loader2, Upload, X } from "lucide-react";
 import Link from "next/link";
+import { supabase } from '@/integrations/supabase/client';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -38,6 +39,8 @@ const EditArticlePage = ({ params }: PageProps) => {
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
     const [imageUrl, setImageUrl] = useState("");
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (article) {
@@ -89,6 +92,97 @@ const EditArticlePage = ({ params }: PageProps) => {
     }, [slug, article]);
 
     const categories = ["การดูแล", "สุขภาพ", "รับเลี้ยง", "โภชนาการ", "พฤติกรรม"];
+
+    // Image compression utility
+    async function compressImage(file: File, maxWidth = 1200, maxHeight = 1200, quality = 0.8) {
+        if (!file.type.startsWith('image/')) return file;
+
+        try {
+            const imageBitmap = await createImageBitmap(file);
+            let { width, height } = imageBitmap;
+
+            const shouldResize = width > maxWidth || height > maxHeight;
+            if (!shouldResize && file.size <= 2 * 1024 * 1024) { // If < 2MB and dimensions ok, skip
+                return file;
+            }
+
+            const ratio = Math.min(maxWidth / width, maxHeight / height, 1);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return file;
+            ctx.drawImage(imageBitmap, 0, 0, width, height);
+
+            return await new Promise<File>((resolve) => {
+                canvas.toBlob(
+                    (blob) => {
+                        if (!blob) return resolve(file);
+                        const compressed = new File([blob], file.name, { type: blob.type });
+                        resolve(compressed);
+                    },
+                    'image/jpeg',
+                    quality
+                );
+            });
+        } catch (e) {
+            console.error("Compression failed:", e);
+            return file;
+        }
+    }
+
+    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!user) {
+            alert.error("กรุณาเข้าสู่ระบบก่อนอัพโหลดรูปภาพ");
+            return;
+        }
+
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+
+        try {
+            // Compress
+            const compressedFile = await compressImage(file);
+
+            // Validate size (max 5MB after compression)
+            if (compressedFile.size > 5 * 1024 * 1024) {
+                alert.error("ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 5MB)");
+                return;
+            }
+
+            const fileExt = compressedFile.name.split('.').pop();
+            // Use user ID based path to avoid RLS issues
+            const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+            const { data, error } = await supabase.storage
+                .from('cat-images') // Reusing existing bucket
+                .upload(fileName, compressedFile);
+
+            if (error) throw error;
+
+            const { data: publicUrlData } = supabase.storage
+                .from('cat-images')
+                .getPublicUrl(data.path);
+
+            setImageUrl(publicUrlData.publicUrl);
+            alert.success("อัพโหลดรูปภาพเรียบร้อย");
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            alert.error("เกิดข้อผิดพลาดในการอัพโหลด", { description: error.message });
+        } finally {
+            setUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setImageUrl("");
+    };
 
     if (isLoading) {
         return (
@@ -219,14 +313,65 @@ const EditArticlePage = ({ params }: PageProps) => {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="imageUrl" className="font-prompt">รูปภาพหน้าปก (URL)</Label>
-                                <Input
-                                    id="imageUrl"
-                                    value={imageUrl}
-                                    onChange={(e) => setImageUrl(e.target.value)}
-                                    placeholder="https://example.com/image.jpg"
-                                    className="font-prompt h-11"
+                                <Label className="font-prompt">รูปภาพหน้าปก</Label>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
                                 />
+
+                                {imageUrl ? (
+                                    <div className="relative rounded-lg overflow-hidden border aspect-video group">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={imageUrl}
+                                            alt="Cover preview"
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                            <Button
+                                                type="button"
+                                                variant="secondary"
+                                                size="sm"
+                                                className="font-prompt text-xs"
+                                                onClick={() => fileInputRef.current?.click()}
+                                                disabled={uploading}
+                                            >
+                                                เปลี่ยนรูป
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="sm"
+                                                className="font-prompt text-xs"
+                                                onClick={handleRemoveImage}
+                                                disabled={uploading}
+                                            >
+                                                <X className="w-3 h-3 mr-1" /> ลบ
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="border-2 border-dashed rounded-lg h-[150px] flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        {uploading ? (
+                                            <>
+                                                <Loader2 className="w-8 h-8 text-muted-foreground animate-spin mb-2" />
+                                                <span className="text-sm text-muted-foreground font-prompt">กำลังอัพโหลด...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                                                <span className="text-sm text-muted-foreground font-prompt">คลิกเพื่ออัพโหลดรูปภาพ</span>
+                                                <span className="text-xs text-muted-foreground/70 font-prompt mt-1">.jpg, .png (สูงสุด 5MB)</span>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
