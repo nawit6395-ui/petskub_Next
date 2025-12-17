@@ -154,7 +154,8 @@ const CreateArticlePage = () => {
             }
 
             const fileExt = compressedFile.name.split('.').pop();
-            const fileName = `articles/${user.id}/${Date.now()}.${fileExt}`;
+            // Use the same path pattern as MultiImageUpload to avoid RLS issues
+            const fileName = `${user.id}/${Date.now()}.${fileExt}`;
 
             const { data, error } = await supabase.storage
                 .from('cat-images') // Reusing existing bucket
