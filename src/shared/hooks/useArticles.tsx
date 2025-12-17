@@ -29,7 +29,8 @@ export const useArticle = (idOrSlug: string | undefined) => {
     queryFn: async () => {
       if (!idOrSlug) throw new Error('Article ID or Slug is required');
 
-      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+      const decodedId = decodeURIComponent(idOrSlug);
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decodedId);
 
       let query = supabase
         .from('knowledge_articles')
@@ -37,9 +38,9 @@ export const useArticle = (idOrSlug: string | undefined) => {
         .eq('published', true);
 
       if (isUUID) {
-        query = query.eq('id', idOrSlug);
+        query = query.eq('id', decodedId);
       } else {
-        query = query.eq('slug', idOrSlug);
+        query = query.eq('slug', decodedId);
       }
 
       const { data, error } = await query.single();

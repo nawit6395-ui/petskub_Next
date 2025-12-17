@@ -13,13 +13,14 @@ async function getArticle(idOrSlug: string) {
         return null;
     }
 
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+    const decodedId = decodeURIComponent(idOrSlug);
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decodedId);
     let url = `${supabaseUrl}/rest/v1/knowledge_articles?select=*&published=eq.true`;
 
     if (isUUID) {
-        url += `&id=eq.${idOrSlug}`;
+        url += `&id=eq.${decodedId}`;
     } else {
-        url += `&slug=eq.${idOrSlug}`;
+        url += `&slug=eq.${decodedId}`;
     }
 
     // Use &limit=1 and header Prefer: return=representation to get single object like .single()

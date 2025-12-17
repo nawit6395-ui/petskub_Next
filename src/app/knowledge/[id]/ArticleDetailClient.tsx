@@ -60,19 +60,19 @@ const ArticleDetailClient = ({ id }: ArticleDetailClientProps) => {
     const { mutate: incrementView } = useIncrementArticleView();
 
     useEffect(() => {
-        if (!id) return;
+        if (!article?.id) return;
 
-        const viewKey = `viewed_article_${id}`;
+        const viewKey = `viewed_article_${article.id}`;
         const lastViewed = localStorage.getItem(viewKey);
         const now = new Date().getTime();
         const twentyFourHours = 24 * 60 * 60 * 1000;
 
         // Check if viewed in the last 24 hours
         if (!lastViewed || now - parseInt(lastViewed) > twentyFourHours) {
-            incrementView(id);
+            incrementView(article.id);
             localStorage.setItem(viewKey, now.toString());
         }
-    }, [id, incrementView]);
+    }, [article?.id, incrementView]);
 
     const handleShareFacebook = () => {
         const url = encodeURIComponent(window.location.href);
