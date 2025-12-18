@@ -47,6 +47,9 @@ import {
   Pencil,
   Heart,
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 const commentSchema = z.object({
   content: z
@@ -260,8 +263,16 @@ const ForumPostPage = () => {
 
           <Separator />
 
-          <div className="prose max-w-none dark:prose-invert">
-            <p className="whitespace-pre-wrap">{post.content}</p>
+          <div className="prose max-w-none dark:prose-invert font-prompt">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+              components={{
+                img: ({ node, ...props }) => <img {...props} className="rounded-xl shadow-md max-w-full h-auto my-4" />,
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
           </div>
 
           {post.image_urls && post.image_urls.length > 0 && (

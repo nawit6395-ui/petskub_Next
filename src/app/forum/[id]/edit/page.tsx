@@ -18,6 +18,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { alert } from "@/lib/alerts";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import RichTextEditor from "@/components/RichTextEditor";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -164,13 +166,35 @@ const EditForumPostPage = ({ params }: PageProps) => {
 
                         <div className="space-y-2">
                             <Label htmlFor="content" className="font-prompt">รายละเอียด *</Label>
-                            <Textarea
-                                id="content"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                            <RichTextEditor
+                                content={content}
+                                onChange={setContent}
+                                onImageUpload={async (file: File) => {
+                                    try {
+                                        if (file.size > 5 * 1024 * 1024) {
+                                            alert.error("ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 5MB)");
+                                            throw new Error("File too large");
+                                        }
+                                        const fileExt = file.name.split('.').pop();
+                                        const fileName = `${user?.id}/forum/${Date.now()}.${fileExt}`;
+                                        const { data, error } = await supabase.storage
+                                            .from('cat-images')
+                                            .upload(fileName, file);
+
+                                        if (error) throw error;
+
+                                        const { data: publicUrlData } = supabase.storage
+                                            .from('cat-images')
+                                            .getPublicUrl(data.path);
+
+                                        return publicUrlData.publicUrl;
+                                    } catch (error) {
+                                        console.error("Editor upload error:", error);
+                                        alert.error("อัพโหลดรูปภาพในเนื้อหาไม่สำเร็จ");
+                                        throw error;
+                                    }
+                                }}
                                 placeholder="เขียนรายละเอียด..."
-                                className="font-prompt min-h-[300px] text-base leading-relaxed p-4"
-                                required
                             />
                         </div>
 

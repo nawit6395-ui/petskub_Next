@@ -14,6 +14,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { alert } from "@/lib/alerts";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { MultiImageUpload } from "@/components/MultiImageUpload";
+import RichTextEditor from "@/components/RichTextEditor";
+import { supabase } from "@/integrations/supabase/client";
 
 const categories = [
     { value: "general", label: "ทั่วไป" },
@@ -151,13 +153,36 @@ const CreateForumPostPage = () => {
 
                         <div className="space-y-2">
                             <Label htmlFor="content" className="font-prompt text-base font-semibold">รายละเอียด <span className="text-red-500">*</span></Label>
-                            <Textarea
-                                id="content"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                            <RichTextEditor
+                                content={content}
+                                onChange={setContent}
+                                onImageUpload={async (file: File) => {
+                                    try {
+                                        // Simple validation and direct upload for forum similar to article
+                                        if (file.size > 5 * 1024 * 1024) {
+                                            alert.error("ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 5MB)");
+                                            throw new Error("File too large");
+                                        }
+                                        const fileExt = file.name.split('.').pop();
+                                        const fileName = `${user?.id}/forum/${Date.now()}.${fileExt}`;
+                                        const { data, error } = await supabase.storage
+                                            .from('cat-images')
+                                            .upload(fileName, file);
+
+                                        if (error) throw error;
+
+                                        const { data: publicUrlData } = supabase.storage
+                                            .from('cat-images')
+                                            .getPublicUrl(data.path);
+
+                                        return publicUrlData.publicUrl;
+                                    } catch (error) {
+                                        console.error("Editor upload error:", error);
+                                        alert.error("อัพโหลดรูปภาพในเนื้อหาไม่สำเร็จ");
+                                        throw error;
+                                    }
+                                }}
                                 placeholder="เขียนรายละเอียดเนื้อหาที่คุณต้องการสอบถามหรือแบ่งปัน..."
-                                className="font-prompt min-h-[300px] text-base leading-relaxed p-4 rounded-xl bg-white/50 focus:bg-white transition-all resize-y"
-                                required
                             />
                         </div>
 
