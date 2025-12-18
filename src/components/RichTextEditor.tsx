@@ -332,15 +332,8 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                                                 const url = (e.target as HTMLInputElement).value;
                                                 if (url) {
                                                     editor.chain().focus().setImage({ src: url }).run();
-                                                    // Close popover logic would need state, simple close on interact
                                                 }
                                             }
-                                        }}
-                                        onChange={(e) => {
-                                            // Optional: simple validation
-                                        }}
-                                        ref={(input) => {
-                                            // Focus helper if needed
                                         }}
                                     />
                                     <Button size="sm" variant="secondary" onClick={(e) => {
@@ -370,7 +363,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 border-none">
                         <EmojiPicker
-                            onEmojiClick={(emojiData) => {
+                            onEmojiClick={(emojiData: any) => {
                                 editor.chain().focus().insertContent(emojiData.emoji).run();
                             }}
                             width={300}
@@ -450,6 +443,7 @@ const RichTextEditor = ({ content, onChange, onImageUpload, placeholder = "à¹€à¸
                 class: 'prose prose-sm sm:prose-base max-w-none focus:outline-none min-h-[300px] p-4 font-prompt',
             },
         },
+        immediatelyRender: false,
     });
 
     // Handle external content updates (e.g., initial load)
