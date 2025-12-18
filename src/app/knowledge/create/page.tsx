@@ -15,6 +15,7 @@ import { alert } from "@/lib/alerts";
 import { ArrowLeft, Save, Upload, X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { supabase } from '@/integrations/supabase/client';
+import RichTextEditor from '@/components/RichTextEditor';
 
 const CreateArticlePage = () => {
     const router = useRouter();
@@ -349,13 +350,36 @@ const CreateArticlePage = () => {
 
                         <div className="space-y-2">
                             <Label htmlFor="content" className="font-prompt">เนื้อหาบทความ *</Label>
-                            <Textarea
-                                id="content"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                            <RichTextEditor
+                                content={content}
+                                onChange={setContent}
+                                onImageUpload={async (file) => {
+                                    try {
+                                        const compressedFile = await compressImage(file);
+                                        if (compressedFile.size > 5 * 1024 * 1024) {
+                                            alert.error("ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 5MB)");
+                                            throw new Error("File too large");
+                                        }
+                                        const fileExt = compressedFile.name.split('.').pop();
+                                        const fileName = `${user?.id}/${Date.now()}_content.${fileExt}`;
+                                        const { data, error } = await supabase.storage
+                                            .from('cat-images')
+                                            .upload(fileName, compressedFile);
+
+                                        if (error) throw error;
+
+                                        const { data: publicUrlData } = supabase.storage
+                                            .from('cat-images')
+                                            .getPublicUrl(data.path);
+
+                                        return publicUrlData.publicUrl;
+                                    } catch (error) {
+                                        console.error("Editor upload error:", error);
+                                        alert.error("อัพโหลดรูปภาพในเนื้อหาไม่สำเร็จ");
+                                        throw error;
+                                    }
+                                }}
                                 placeholder="เขียนเนื้อหาบทความที่นี่..."
-                                className="font-prompt min-h-[400px] text-base leading-relaxed p-4"
-                                required
                             />
                         </div>
 

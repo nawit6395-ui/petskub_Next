@@ -227,13 +227,13 @@ function AuthPageContent() {
     };
 
     // Derived State for UI Theme
-    const themeColor = isLogin ? "bg-[#F59E0B]" : "bg-[#65A30D]"; // Amber : Lime
+    const themeColor = isLogin ? "bg-[#FB923C]" : "bg-[#84CC16]"; // Orange-400 : Lime-500
     const themeGradient = isLogin
-        ? "from-amber-400 to-amber-600"
-        : "from-lime-500 to-lime-700";
+        ? "from-orange-300 to-orange-500"
+        : "from-lime-400 to-lime-600";
     const buttonColor = isLogin
-        ? "bg-[#F59E0B] hover:bg-[#D97706]"
-        : "bg-[#65A30D] hover:bg-[#4D7C0F]";
+        ? "bg-[#FB923C] hover:bg-[#F97316]"
+        : "bg-[#84CC16] hover:bg-[#65A30D]";
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-[#FDF8F6] p-4 font-prompt">
@@ -256,7 +256,7 @@ function AuthPageContent() {
                             />
                             <span className={cn(
                                 "font-bold tracking-widest text-sm",
-                                isLogin ? "text-[#F59E0B]" : "text-[#65A30D]"
+                                isLogin ? "text-[#FB923C]" : "text-[#84CC16]"
                             )}>PETSKUB</span>
                         </div>
 
@@ -399,7 +399,7 @@ function AuthPageContent() {
                                         <button
                                             type="button"
                                             onClick={handleForgotPasswordClick}
-                                            className="text-xs font-semibold text-[#F59E0B] hover:underline"
+                                            className="text-xs font-semibold text-[#FB923C] hover:underline"
                                         >
                                             ลืมรหัสผ่าน?
                                         </button>
@@ -439,7 +439,7 @@ function AuthPageContent() {
                                 type="submit"
                                 className={cn(
                                     "w-full h-12 rounded-xl text-base font-bold shadow-lg transition-all hover:scale-[1.02]",
-                                    isLogin ? "shadow-amber-500/20" : "shadow-lime-600/20",
+                                    isLogin ? "shadow-orange-500/20" : "shadow-lime-600/20",
                                     buttonColor
                                 )}
                             >
@@ -455,7 +455,7 @@ function AuthPageContent() {
                                     setIsLogin(!isLogin);
                                     setErrors({});
                                 }}
-                                className={cn("font-bold hover:underline", isLogin ? "text-[#F59E0B]" : "text-[#65A30D]")}
+                                className={cn("font-bold hover:underline", isLogin ? "text-[#FB923C]" : "text-[#84CC16]")}
                             >
                                 {isLogin ? "สมัครสมาชิกเลย" : "เข้าสู่ระบบ"}
                             </button>

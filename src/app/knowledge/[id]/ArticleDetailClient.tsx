@@ -15,6 +15,7 @@ import { alert as appAlert, alert } from "@/shared/lib/alerts";
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { useIncrementArticleView, useDeleteArticle } from "@/shared/hooks/useArticles";
 
 interface ArticleDetailClientProps {
@@ -218,6 +219,7 @@ const ArticleDetailClient = ({ id }: ArticleDetailClientProps) => {
                         >
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
                                 components={{
                                     img: MarkdownImage,
                                 }}
