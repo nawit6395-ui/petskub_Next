@@ -28,7 +28,9 @@ import {
     Redo,
     Type,
     X,
-    Check
+    Check,
+    Smile,
+    Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -36,6 +38,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import EmojiPicker from 'emoji-picker-react';
 
 interface RichTextEditorProps {
     content: string;
@@ -291,15 +294,90 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     </PopoverContent>
                 </Popover>
 
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={addImage}
-                    className="h-8 w-8"
-                    title="Image"
-                >
-                    <ImageIcon className="h-4 w-4" />
-                </Button>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={cn("h-8 w-8", editor.isActive('image') && "bg-muted text-primary")}
+                            title="Image"
+                        >
+                            <ImageIcon className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-3">
+                        <div className="space-y-3">
+                            <h4 className="font-medium leading-none text-sm">Insert Image</h4>
+                            <div className="flex flex-col gap-2">
+                                {onImageUpload && (
+                                    <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={addImage}>
+                                        <Upload className="h-4 w-4" />
+                                        Upload from Device
+                                    </Button>
+                                )}
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <span className="w-full border-t" />
+                                    </div>
+                                    <div className="relative flex justify-center text-xs uppercase">
+                                        <span className="bg-background px-2 text-muted-foreground">Or URL</span>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="https://example.com/image.jpg"
+                                        className="h-8 text-sm"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                const url = (e.target as HTMLInputElement).value;
+                                                if (url) {
+                                                    editor.chain().focus().setImage({ src: url }).run();
+                                                    // Close popover logic would need state, simple close on interact
+                                                }
+                                            }
+                                        }}
+                                        onChange={(e) => {
+                                            // Optional: simple validation
+                                        }}
+                                        ref={(input) => {
+                                            // Focus helper if needed
+                                        }}
+                                    />
+                                    <Button size="sm" variant="secondary" onClick={(e) => {
+                                        const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                        if (input.value) {
+                                            editor.chain().focus().setImage({ src: input.value }).run();
+                                        }
+                                    }} className="h-8 px-3">
+                                        Add
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </PopoverContent>
+                </Popover>
+
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-yellow-500 hover:text-yellow-600"
+                            title="Emoji"
+                        >
+                            <Smile className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-none">
+                        <EmojiPicker
+                            onEmojiClick={(emojiData) => {
+                                editor.chain().focus().insertContent(emojiData.emoji).run();
+                            }}
+                            width={300}
+                            height={400}
+                        />
+                    </PopoverContent>
+                </Popover>
 
                 <Popover>
                     <PopoverTrigger asChild>
