@@ -100,6 +100,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().undo().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     disabled={!editor.can().undo()}
                     className="h-8 w-8"
                     title="Undo"
@@ -111,6 +112,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().redo().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     disabled={!editor.can().redo()}
                     className="h-8 w-8"
                     title="Redo"
@@ -125,6 +127,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleBold().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('bold') && "bg-muted text-primary")}
                     title="Bold"
                 >
@@ -135,6 +138,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('italic') && "bg-muted text-primary")}
                     title="Italic"
                 >
@@ -145,6 +149,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('underline') && "bg-muted text-primary")}
                     title="Underline"
                 >
@@ -155,6 +160,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleStrike().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('strike') && "bg-muted text-primary")}
                     title="Strikethrough"
                 >
@@ -168,6 +174,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('heading', { level: 1 }) && "bg-muted text-primary")}
                     title="Heading 1"
                 >
@@ -178,6 +185,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('heading', { level: 2 }) && "bg-muted text-primary")}
                     title="Heading 2"
                 >
@@ -188,6 +196,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setParagraph().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('paragraph') && "bg-muted text-primary")}
                     title="Paragraph"
                 >
@@ -201,6 +210,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setTextAlign('left').run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive({ textAlign: 'left' }) && "bg-muted text-primary")}
                     title="Align Left"
                 >
@@ -211,6 +221,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setTextAlign('center').run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive({ textAlign: 'center' }) && "bg-muted text-primary")}
                     title="Align Center"
                 >
@@ -221,6 +232,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setTextAlign('right').run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive({ textAlign: 'right' }) && "bg-muted text-primary")}
                     title="Align Right"
                 >
@@ -234,6 +246,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('bulletList') && "bg-muted text-primary")}
                     title="Bullet List"
                 >
@@ -244,6 +257,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('orderedList') && "bg-muted text-primary")}
                     title="Ordered List"
                 >
@@ -254,6 +268,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                    onMouseDown={(e) => e.preventDefault()}
                     className={cn("h-8 w-8", editor.isActive('blockquote') && "bg-muted text-primary")}
                     title="Blockquote"
                 >
@@ -274,6 +289,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                                 const previousUrl = editor.getAttributes('link').href;
                                 setLinkUrl(previousUrl || '');
                             }}
+                            onMouseDown={(e) => e.preventDefault()}
                         >
                             <LinkIcon className="h-4 w-4" />
                         </Button>
@@ -318,6 +334,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                             size="icon"
                             className={cn("h-8 w-8", editor.isActive('image') && "bg-muted text-primary")}
                             title="Image"
+                            onMouseDown={(e) => e.preventDefault()}
                         >
                             <ImageIcon className="h-4 w-4" />
                         </Button>
@@ -375,6 +392,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                             size="icon"
                             className="h-8 w-8 text-yellow-500 hover:text-yellow-600"
                             title="Emoji"
+                            onMouseDown={(e) => e.preventDefault()}
                         >
                             <Smile className="h-4 w-4" />
                         </Button>
@@ -398,6 +416,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                             size="icon"
                             className="h-8 w-8"
                             title="Text Color"
+                            onMouseDown={(e) => e.preventDefault()}
                         >
                             <div className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: editor.getAttributes('textStyle').color || 'transparent' }}>
                                 <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-foreground">A</span>
