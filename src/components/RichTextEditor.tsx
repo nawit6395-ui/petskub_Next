@@ -96,6 +96,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
         <div className="border-b bg-muted/30 p-2 flex flex-wrap gap-1 items-center sticky top-0 z-10 backdrop-blur-sm">
             <div className="flex items-center gap-1 border-r pr-2 mr-1">
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().undo().run()}
@@ -106,6 +107,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <Undo className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().redo().run()}
@@ -119,6 +121,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
 
             <div className="flex items-center gap-1 border-r pr-2 mr-1">
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleBold().run()}
@@ -128,6 +131,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <Bold className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -137,6 +141,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <Italic className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -146,6 +151,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <UnderlineIcon className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -158,6 +164,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
 
             <div className="flex items-center gap-1 border-r pr-2 mr-1">
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -167,6 +174,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <Heading1 className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -176,6 +184,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <Heading2 className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setParagraph().run()}
@@ -188,6 +197,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
 
             <div className="flex items-center gap-1 border-r pr-2 mr-1">
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -197,6 +207,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <AlignLeft className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setTextAlign('center').run()}
@@ -206,6 +217,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <AlignCenter className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().setTextAlign('right').run()}
@@ -218,6 +230,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
 
             <div className="flex items-center gap-1 border-r pr-2 mr-1">
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -227,6 +240,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <List className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -236,6 +250,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                     <ListOrdered className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -250,6 +265,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                 <Popover open={isLinkPopoverOpen} onOpenChange={setIsLinkPopoverOpen}>
                     <PopoverTrigger asChild>
                         <Button
+                            type="button"
                             variant="ghost"
                             size="icon"
                             className={cn("h-8 w-8", editor.isActive('link') && "bg-muted text-primary")}
@@ -278,11 +294,11 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                                         }
                                     }}
                                 />
-                                <Button size="sm" onClick={setLink} className="h-8 w-8 p-0 shrink-0">
+                                <Button type="button" size="sm" onClick={setLink} className="h-8 w-8 p-0 shrink-0">
                                     <Check className="h-4 w-4" />
                                 </Button>
                                 {editor.isActive('link') && (
-                                    <Button size="sm" variant="destructive" onClick={() => {
+                                    <Button type="button" size="sm" variant="destructive" onClick={() => {
                                         editor.chain().focus().unsetLink().run();
                                         setIsLinkPopoverOpen(false);
                                     }} className="h-8 w-8 p-0 shrink-0">
@@ -297,6 +313,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
+                            type="button"
                             variant="ghost"
                             size="icon"
                             className={cn("h-8 w-8", editor.isActive('image') && "bg-muted text-primary")}
@@ -310,7 +327,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                             <h4 className="font-medium leading-none text-sm">Insert Image</h4>
                             <div className="flex flex-col gap-2">
                                 {onImageUpload && (
-                                    <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={addImage}>
+                                    <Button type="button" variant="outline" size="sm" className="w-full justify-start gap-2" onClick={addImage}>
                                         <Upload className="h-4 w-4" />
                                         Upload from Device
                                     </Button>
@@ -336,7 +353,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                                             }
                                         }}
                                     />
-                                    <Button size="sm" variant="secondary" onClick={(e) => {
+                                    <Button type="button" size="sm" variant="secondary" onClick={(e) => {
                                         const input = e.currentTarget.previousElementSibling as HTMLInputElement;
                                         if (input.value) {
                                             editor.chain().focus().setImage({ src: input.value }).run();
@@ -353,6 +370,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
+                            type="button"
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-yellow-500 hover:text-yellow-600"
@@ -375,6 +393,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
+                            type="button"
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
@@ -389,6 +408,7 @@ const MenuBar = ({ editor, onImageUpload }: { editor: Editor | null, onImageUplo
                         <div className="flex gap-1 flex-wrap w-[140px]">
                             {['#000000', '#252525', '#555555', '#E53E3E', '#D69E2E', '#38A169', '#3182CE', '#805AD5', '#D53F8C'].map((color) => (
                                 <button
+                                    type="button"
                                     key={color}
                                     onClick={() => editor.chain().focus().setColor(color).run()}
                                     className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
