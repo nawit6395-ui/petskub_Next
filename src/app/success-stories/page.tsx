@@ -119,6 +119,7 @@ const SuccessStoriesPage = () => {
                 userId={cat.user_id}
                 healthStatus={cat.health_status}
                 isSterilized={cat.is_sterilized}
+                createdAt={cat.created_at}
               />
             ))}
           </div>

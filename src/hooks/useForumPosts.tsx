@@ -147,7 +147,7 @@ const withStatsFallback = async <T,>(primary: () => Promise<T>, fallback: () => 
 const fetchPostsFromStatsView = async (category?: string, userId?: string) => {
   let query = supabase
     .from('forum_post_stats' as any)
-    .select('*, slug')
+    .select('*')
     .order('is_pinned', { ascending: false })
     .order('trend_score', { ascending: false })
     .order('created_at', { ascending: false });
@@ -222,11 +222,16 @@ const fetchPostsFromBaseTable = async (category?: string, userId?: string) => {
 const isUuid = (text: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(text);
 
 const fetchPostFromStatsView = async (postIdOrSlug: string, userId?: string) => {
-  const column = isUuid(postIdOrSlug) ? 'id' : 'slug';
+  // View doesn't have slug column, so if querying by slug, we must use base table
+  if (!isUuid(postIdOrSlug)) {
+    // Query by slug - must use base table since view doesn't have slug
+    throw new Error('Slug query not supported on stats view');
+  }
+  
   const { data, error } = await supabase
     .from('forum_post_stats' as any)
-    .select('*, slug') // Force checking slug column
-    .eq(column, postIdOrSlug)
+    .select('*')
+    .eq('id', postIdOrSlug)
     .single();
 
   if (error) throw error;
@@ -280,7 +285,7 @@ const fetchPostFromBaseTable = async (postIdOrSlug: string, userId?: string) => 
 const fetchTrendingFromStatsView = async (limit: number, userId?: string) => {
   const { data, error } = await supabase
     .from('forum_post_stats' as any)
-    .select('*, slug')
+    .select('*')
     .order('trend_score', { ascending: false })
     .limit(limit);
 
