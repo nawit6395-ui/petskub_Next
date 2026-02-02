@@ -22,8 +22,8 @@ const prompt = Prompt({
 
 const siteUrl = "https://petskub.com";
 const siteName = "PetsKub";
-const siteTitle = "PetsKub - ช่วยแมวและสุนัขจร ให้ได้บ้านที่อบอุ่น";
-const siteDescription = "PetsKub ชุมชนช่วยเหลือแมวและสุนัขจรในประเทศไทย ร่วมกันหาบ้านที่อบอุ่น ลดปัญหาสัตว์จรจัด";
+const siteTitle = "Petskub – หมาหาบ้าน แมวหาบ้าน รับเลี้ยงสุนัข รับเลี้ยงแมว ลงประกาศหาบ้านฟรี";
+const siteDescription = "Petskub พื้นที่สื่อกลางสำหรับคนรักสัตว์ หาบ้านให้หมา หาบ้านให้แมว รับเลี้ยงสุนัข รับเลี้ยงแมว ลงประกาศหาบ้านให้สัตว์เลี้ยงฟรี แจ้งพิกัดสัตว์จรจัด ครอบคลุมกรุงเทพฯ และทั่วประเทศไทย";
 const ogImage = "/Logo.png"; // stored in public for faster, reliable fetch by crawlers
 
 export const metadata: Metadata = {
@@ -35,12 +35,23 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: siteName,
   keywords: [
-    "PetsKub",
-    "รับเลี้ยงแมว",
+    "Petskub",
+    "หมาหาบ้าน",
+    "แมวหาบ้าน",
     "รับเลี้ยงสุนัข",
+    "รับเลี้ยงแมว",
+    "ลงประกาศหาบ้าน",
+    "หาบ้านให้หมา",
+    "หาบ้านให้แมว",
     "สัตว์จรจัด",
-    "ช่วยสัตว์จร",
+    "ลูกสุนัขแจกฟรี",
+    "ลูกแมวหาบ้าน",
+    "สุนัขหาบ้าน",
+    "แจ้งพิกัดสัตว์จร",
+    "รับเลี้ยงสัตว์",
     "อาสาสมัครดูแลสัตว์",
+    "กรุงเทพ",
+    "ปทุมธานี",
   ],
   authors: [{ name: "Petskub Community" }],
   alternates: {

@@ -110,7 +110,7 @@ export const UrgentCaseCard = ({
           {image_url && image_url.length > 0 ? (
             <Image
               src={image_url[0]}
-              alt={title}
+              alt={`${caseTypeLabels[case_type]}-${title}-${province}-ช่วยเหลือสัตว์จร-Petskub`}
               fill
               className={`object-cover transition duration-300 ${image_url.length > 1 ? 'cursor-pointer hover:scale-[1.02]' : ''} ${is_resolved ? 'brightness-75' : ''}`}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

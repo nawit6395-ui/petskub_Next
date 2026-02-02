@@ -14,7 +14,7 @@ const Footer = () => {
             <div className="flex items-center gap-3 sm:gap-4 font-bold text-xl sm:text-2xl text-primary mb-4">
               <Image
                 src={Logo}
-                alt="Petskub logo"
+                alt="Petskub โลโก้เว็บไซต์หมาหาบ้านแมวหาบ้าน"
                 className="h-12 sm:h-14 lg:h-16 w-auto drop-shadow-[0_8px_20px_rgba(249,115,22,0.4)]"
                 loading="lazy"
               />
@@ -23,8 +23,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-sm text-muted-foreground font-prompt">
-              ชุมชนช่วยเหลือแมวและสุนัขจรในประเทศไทย<br />
-              ร่วมกันหาบ้านให้สัตว์ เลี้ยง ลดปัญหาสัตว์จรจัดในเมือง
+              <strong>เกี่ยวกับ Petskub:</strong> เว็บไซต์สื่อกลางสำหรับคนรักสัตว์ พื้นที่สำหรับหาบ้านให้หมา หาบ้านให้แมว และสัตว์เลี้ยงอื่นๆ มุ่งมั่นลดปัญหาสัตว์จรจัดในสังคมไทย เชื่อมโยงผู้ให้และผู้รับเลี้ยงเข้าด้วยกัน ครอบคลุมพื้นที่กรุงเทพฯ ปทุมธานี และทั่วประเทศ
             </p>
           </div>
 

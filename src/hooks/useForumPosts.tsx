@@ -136,12 +136,11 @@ const withStatsFallback = async <T,>(primary: () => Promise<T>, fallback: () => 
   try {
     return await primary();
   } catch (error) {
+    // Logic to detect if we should fallback
+    // We fallback on almost any database error from the view to ensure robustness
     const postgrestError = error as PostgrestError;
-    if (isInteractiveSchemaMissing(postgrestError)) {
-      console.warn('[forum] Falling back to legacy forum_posts query because forum_post_stats is unavailable.');
-      return fallback();
-    }
-    throw error;
+    console.warn('[forum] Stats view query failed, falling back to base table:', postgrestError?.message || error);
+    return fallback();
   }
 };
 

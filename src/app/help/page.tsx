@@ -33,11 +33,11 @@ const HelpPage = () => {
                   <span className="rounded-full bg-white/90 px-4 py-1 tracking-normal text-rose-600 shadow-sm">24/7 SOS</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="font-prompt text-4xl font-bold text-rose-600">ช่วยเหลือด่วน</h1>
+                  <h1 className="font-prompt text-4xl font-bold text-rose-600">ช่วยเหลือสัตว์จรจัดด่วน</h1>
                   <span className="rounded-2xl bg-gradient-to-r from-rose-500 via-rose-400 to-orange-400 px-3 py-1 text-sm font-semibold text-white shadow-soft">SOS</span>
                 </div>
                 <p className="font-prompt text-base text-muted-foreground sm:text-lg">
-                  รายงานอุบัติเหตุ บาดเจ็บ หรือแมวสุนัขตกทุกข์ได้ยาก ระบุตำแหน่งและข้อมูลติดต่อให้ทีมช่วยเหลือเดินทางถึงพื้นที่ได้เร็วขึ้น
+                  รายงานอุบัติเหตุ สัตว์บาดเจ็บ หรือหมาแมวตกทุกข์ได้ยาก ระบุตำแหน่งและข้อมูลติดต่อให้อาสาสมัครช่วยเหลือเดินทางถึงพื้นที่ได้เร็วขึ้น
                 </p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">

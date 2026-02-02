@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import ReportMapWrapper from "./ReportMapWrapper";
+import { Metadata } from "next";
 
-export const metadata = {
-    title: "แผนที่รายงานสัตว์จร | Petskub",
-    description: "ติดตามและช่วยเหลือสัตว์จรบนแผนที่แบบเรียลไทม์",
+export const metadata: Metadata = {
+    title: "แผนที่รายงานสัตว์จรจัด ทั่วประเทศ | Petskub",
+    description: "ติดตามและช่วยเหลือสัตว์จรบนแผนที่แบบเรียลไทม์ ดูจุดพบสัตว์จร กรุงเทพ ปทุมธานี และทั่วประเทศไทย",
+    keywords: ["แผนที่สัตว์จร", "จุดพบสัตว์จร", "ช่วยเหลือสัตว์", "กรุงเทพ", "ปทุมธานี"],
 };
 
 export default function ReportMapPage() {

@@ -104,14 +104,14 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
   };
 
   const buildShareText = () =>
-    `ช่วยกันแชร์ให้น้อง${name}ได้บ้านใหม่\n• อายุ: ${age}\n• พื้นที่: ${province}${district ? ` - ${district}` : ""}\n• สุขภาพ: ${healthStatus || "แข็งแรง"}\nติดต่อ: ${contactName || "เจ้าของ"}${contactPhone ? ` (${contactPhone})` : ""}`.trim();
+    `🐾 ช่วยแชร์ให้น้อง${name}ได้บ้านใหม่ด้วยนะคะ/ครับ!\n\n• อายุ: ${age}\n• พื้นที่: ${province}${district ? ` - ${district}` : ""}\n• สุขภาพ: ${healthStatus || "แข็งแรง"}\n\n👇 ดูรายละเอียดเพิ่มเติมได้ที่`.trim();
 
   const shareOnFacebook = () => {
     if (typeof window === "undefined") return;
     const url = buildShareUrl();
     if (!url) return;
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(shareUrl, "_blank", "noopener,noreferrer");
+    window.open(shareUrl, "_blank", "noopener,noreferrer,width=600,height=400");
   };
 
   const shareOnLine = () => {
@@ -119,7 +119,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
     const url = buildShareUrl();
     if (!url) return;
     const text = buildShareText();
-    const shareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${text}\n${url}`)}`;
+    const shareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
     window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -130,7 +130,9 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
-        alert.success("คัดลอกข้อความสำหรับแชร์แล้ว");
+        alert.success("คัดลอกลิงก์แล้ว!", {
+          description: "พร้อมแชร์ให้เพื่อนๆ ช่วยหาบ้านให้น้อง"
+        });
       } else {
         throw new Error("Clipboard API unavailable");
       }
@@ -138,6 +140,21 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
       alert.error("คัดลอกไม่สำเร็จ", {
         description: (error as Error)?.message || "พยายามอีกครั้ง",
       });
+    }
+  };
+
+  const copyUrlOnly = async () => {
+    if (typeof navigator === "undefined") return;
+    const url = buildShareUrl();
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+        alert.success("คัดลอก URL แล้ว!");
+      } else {
+        throw new Error("Clipboard API unavailable");
+      }
+    } catch (error) {
+      alert.error("คัดลอกไม่สำเร็จ");
     }
   };
 
@@ -158,7 +175,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
         >
           <Image
             src={firstImage}
-            alt={name}
+            alt={`${name}-สัตว์เลี้ยงหาบ้าน-${province}${district ? `-${district}` : ''}-Petskub`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className={`object-cover transition duration-300 ${displayImages.length > 1 ? 'cursor-pointer hover:scale-[1.02]' : ''} ${isAdopted ? 'brightness-75' : ''}`}
@@ -371,37 +388,52 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                         <Share2 className="w-4 h-4" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent align="end" className="w-48 rounded-2xl border border-amber-100 bg-white shadow-xl p-2 space-y-1">
+                    <PopoverContent align="end" className="w-56 rounded-2xl border border-amber-100 bg-white shadow-xl p-3 space-y-1">
+                      <p className="text-xs text-muted-foreground font-prompt px-2 pb-2 border-b border-amber-100">
+                        🐾 ช่วยแชร์ให้น้อง{name}หาบ้านเร็วขึ้น
+                      </p>
                       <button
                         type="button"
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-prompt text-slate-700 hover:bg-amber-50"
+                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-prompt text-slate-700 hover:bg-blue-50 transition-colors"
                         onClick={shareOnFacebook}
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
                           <FaFacebookF className="text-sm" />
                         </span>
                         แชร์ผ่าน Facebook
                       </button>
                       <button
                         type="button"
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-prompt text-slate-700 hover:bg-amber-50"
+                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-prompt text-slate-700 hover:bg-green-50 transition-colors"
                         onClick={shareOnLine}
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-green-500 text-white shadow-sm">
                           <FaLine className="text-lg" />
                         </span>
                         แชร์ผ่าน LINE
                       </button>
-                      <button
-                        type="button"
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-prompt text-slate-700 hover:bg-amber-50"
-                        onClick={copyShareLink}
-                      >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700">
-                          <Share2 className="w-4 h-4" />
-                        </span>
-                        คัดลอกลิงก์
-                      </button>
+                      <div className="border-t border-amber-100 pt-1 mt-1">
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-prompt text-slate-700 hover:bg-amber-50 transition-colors"
+                          onClick={copyShareLink}
+                        >
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-amber-700">
+                            <MessageCircle className="w-4 h-4" />
+                          </span>
+                          คัดลอกข้อความแชร์
+                        </button>
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-prompt text-slate-700 hover:bg-slate-50 transition-colors"
+                          onClick={copyUrlOnly}
+                        >
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600">
+                            <Share2 className="w-4 h-4" />
+                          </span>
+                          คัดลอกลิงก์ URL
+                        </button>
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </div>

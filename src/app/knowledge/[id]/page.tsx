@@ -56,10 +56,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
-    const title = `${article.title} | PetsKub`;
+    const title = `${article.title} | บทความความรู้รับเลี้ยงสัตว์ | PetsKub`;
     const description = article.content
-        ? article.content.substring(0, 150).replace(/\n/g, ' ') + '...'
-        : "อ่านบทความน่ารู้เกี่ยวกับสัตว์เลี้ยงที่ PetsKub";
+        ? article.content.substring(0, 150).replace(/\n/g, ' ').replace(/#/g, '') + '...'
+        : "อ่านบทความความรู้เกี่ยวกับการรับเลี้ยงสุนัข รับเลี้ยงแมว และการดูแลสัตว์เลี้ยงจาก PetsKub";
 
     const images = article.image_url ? [article.image_url] : [];
     const canonicalUrl = `https://petskub.com/knowledge/${id}`;

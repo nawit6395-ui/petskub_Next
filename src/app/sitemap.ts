@@ -66,16 +66,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/login`,
+      url: `${baseUrl}/help`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.4,
+      changeFrequency: 'daily',
+      priority: 0.8,
     },
     {
-      url: `${baseUrl}/register`,
+      url: `${baseUrl}/success-stories`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.4,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
   ];
 
@@ -97,5 +103,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...routes, ...articleRoutes, ...forumRoutes];
+  // 4. Dynamic Pet Share Pages
+  const pets = await fetchSupabaseData("cats", "id");
+  const petRoutes: MetadataRoute.Sitemap = pets.map((item: any) => ({
+    url: `${baseUrl}/share/pet/${item.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.7,
+  }));
+
+  return [...routes, ...articleRoutes, ...forumRoutes, ...petRoutes];
 }

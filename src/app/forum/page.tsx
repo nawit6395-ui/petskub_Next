@@ -98,7 +98,7 @@ const ForumPage = () => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={url}
-              alt={`แนบรูปที่ ${index + 1}`}
+              alt={`รูปประกอบกระทู้ฟอรั่มคนรักสัตว์ที่ ${index + 1}`}
               className="h-full w-full object-cover"
             />
             {index === preview.length - 1 && remaining > 0 && (
@@ -126,10 +126,10 @@ const ForumPage = () => {
               <span className="bg-gradient-to-br from-orange-400 to-rose-400 text-white p-3 rounded-2xl shadow-lg shadow-orange-200 rotate-3">
                 <FaComments className="h-7 w-7" />
               </span>
-              เว็บบอร์ด <span className="text-orange-500">PetsKub</span>
+              ฟอรั่มคนรักสัตว์ <span className="text-orange-500">PetsKub</span>
             </h1>
             <p className="text-base text-gray-500 font-prompt max-w-lg leading-relaxed pl-1">
-              พื้นที่อบอุ่นสำหรับคนรักสัตว์ แลกเปลี่ยนเรื่องราวดีๆ และสอบถามข้อสงสัย
+              พื้นที่อบอุ่นสำหรับคนรักสัตว์ แลกเปลี่ยนความรู้เรื่องการรับเลี้ยงสุนัข รับเลี้ยงแมว สุขภาพสัตว์ และสอบถามข้อสงสัย
             </p>
           </div>
 

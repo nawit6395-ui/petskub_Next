@@ -47,9 +47,9 @@ const AdoptPageClient = () => {
         <div className="mb-12 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-5 text-center lg:text-left">
             <div>
-              <h1 className="mb-3 text-4xl font-bold font-prompt">หาบ้านให้สัตว์เลี้ยง 🏠</h1>
+              <h1 className="mb-3 text-4xl font-bold font-prompt">รวมประกาศสุนัขหาบ้าน และ แมวหาบ้าน 🏠</h1>
               <p className="text-base text-muted-foreground font-prompt sm:text-lg">
-                เลือกดูโปรไฟล์น้องแมวและสุนัขที่เปิดรับเลี้ยง พร้อมภาพล่าสุดและข้อมูลสุขภาพจากผู้ดูแล
+                ทาสแมวและคนรักหมาห้ามพลาด! น้องหมาน้องเหมียวขี้อ้อน ลูกสุนัขแจกฟรี ลูกแมวหาบ้าน หลากหลายสีสัน รอให้คุณมารับไปดูแล ค้นหารับเลี้ยงสุนัข รับเลี้ยงแมว ใกล้บ้านคุณ
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
@@ -70,7 +70,7 @@ const AdoptPageClient = () => {
             <div className="media-frame h-[260px] w-full max-w-[520px] sm:h-[320px]">
               <ResponsivePicture
                 picture={adoptHeroPrimaryPicture}
-                alt="อาสาสมัครอุ้มน้องแมว"
+                alt="แมวหาบ้านน่ารักรอรับเลี้ยง-Petskub-กรุงเทพ"
                 sizes="(max-width: 1024px) 100vw, 520px"
                 loading="eager"
                 decoding="async"
@@ -90,7 +90,7 @@ const AdoptPageClient = () => {
               <div className="media-frame-sm h-[120px]">
                 <ResponsivePicture
                   picture={adoptHeroSecondaryPicture}
-                  alt="น้องแมวในบ้านใหม่"
+                  alt="ลูกแมวหาบ้านได้บ้านใหม่แล้ว-Petskub"
                   sizes="(max-width: 768px) 60vw, 180px"
                   loading="lazy"
                   decoding="async"
