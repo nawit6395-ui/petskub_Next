@@ -272,6 +272,39 @@ const Navbar = () => {
 
 
           <div className="md:hidden flex flex-col gap-2">
+            <div
+              ref={mobileNavScrollRef}
+              className="flex items-center gap-2 overflow-x-auto pb-1"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {mobileNavItems.map((link, index) => {
+                const isClone = index >= navLinks.length;
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={`${link.path}-${index}`}
+                    href={link.path}
+                    className="flex-shrink-0 w-[140px]"
+                    tabIndex={isClone ? -1 : undefined}
+                    aria-hidden={isClone ? "true" : undefined}
+                  >
+                    <Button
+                      variant="ghost"
+                      className={cn(getNavClasses(link.path), "w-full justify-center text-xs")}
+                      aria-current={!isClone && isActive(link.path) ? "page" : undefined}
+                    >
+                      <span
+                        className="inline-flex items-center justify-center h-7 w-7 rounded-full"
+                        style={{ backgroundColor: hexToRgba(link.color, 0.12), color: link.color }}
+                      >
+                        <Icon className="w-4 h-4" aria-hidden="true" />
+                      </span>
+                      {link.label}
+                    </Button>
+                  </Link>
+                );
+              })}
+            </div>
             <Button
               asChild
               className="w-full rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 font-prompt text-white shadow-[0_10px_25px_rgba(234,88,12,0.4)]"

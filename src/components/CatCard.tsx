@@ -186,7 +186,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
   return (
     <>
       <Card className={`group overflow-hidden border-0 rounded-2xl sm:rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] sm:hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 sm:duration-500 ease-out ${isAdopted ? 'ring-2 ring-emerald-200' : 'hover:-translate-y-0.5 sm:hover:-translate-y-1'}`}>
-        <div className={`relative w-full aspect-[16/9] sm:aspect-[4/3] overflow-hidden ${isAdopted ? '' : 'group-hover:brightness-105'}`}>
+        <div className={`relative w-full aspect-[3/2] sm:aspect-[4/3] overflow-hidden ${isAdopted ? '' : 'group-hover:brightness-105'}`}>
           <Image
             src={firstImage}
             alt={`${name}-สัตว์เลี้ยงหาบ้าน-${province}${district ? `-${district}` : ''}-Petskub`}
@@ -217,11 +217,11 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
           {displayImages.length > 1 && (
             <button
               type="button"
-              className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 flex items-center gap-1 sm:gap-1.5 bg-black/60 backdrop-blur-md text-white border-0 font-prompt cursor-pointer z-10 text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg hover:bg-black/75 transition-colors active:scale-95"
+              className="absolute bottom-1 left-1 sm:bottom-3 sm:left-3 flex items-center gap-0.5 sm:gap-1.5 bg-black/60 backdrop-blur-md text-white border-0 font-prompt cursor-pointer z-10 text-[8px] sm:text-xs px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full shadow-lg hover:bg-black/75 transition-colors active:scale-95"
               onClick={() => setGalleryOpen(true)}
             >
-              <span className="text-xs sm:text-sm">📷</span>
-              <span className="font-medium">{displayImages.length}</span>
+              <span className="text-[9px] sm:text-sm">📷</span>
+              <span className="font-medium text-[8px] sm:text-xs">{displayImages.length}</span>
             </button>
           )}
 
@@ -245,15 +245,15 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
 
           {/* Urgent badge */}
           {urgent && !isAdopted && (
-            <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-prompt text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg animate-pulse">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping" />
+            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 flex items-center gap-0.5 sm:gap-1.5 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-prompt text-[8px] sm:text-xs font-semibold px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full shadow-lg animate-pulse">
+              <span className="w-1 h-1 sm:w-2 sm:h-2 bg-white rounded-full animate-ping" />
               <span>ด่วน</span>
             </div>
           )}
 
           {/* Gender badge on image */}
-          <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 flex items-center gap-1 sm:gap-1.5 bg-white/95 backdrop-blur-sm text-slate-700 font-prompt text-[10px] sm:text-xs font-medium px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg">
-            <span>{gender === 'ชาย' ? '♂️' : gender === 'หญิง' ? '♀️' : '⚪'}</span>
+          <div className="absolute bottom-1 right-1 sm:bottom-3 sm:right-3 flex items-center gap-0.5 sm:gap-1.5 bg-white/95 backdrop-blur-sm text-slate-700 font-prompt text-[8px] sm:text-xs font-medium px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full shadow-lg">
+            <span className="text-[10px] sm:text-sm">{gender === 'ชาย' ? '♂️' : gender === 'หญิง' ? '♀️' : '⚪'}</span>
             <span className="hidden xs:inline">{gender}</span>
           </div>
         </div>
@@ -362,7 +362,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                 {!showContact ? (
                   <Button
                     size="sm"
-                    className="flex-1 font-prompt gap-1 text-[9px] sm:text-xs h-7 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-orange-400 to-amber-400 text-white font-medium shadow-sm active:scale-[0.98]"
+                    className="flex-1 font-prompt gap-1 text-[8px] sm:text-xs h-6.5 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-orange-400 to-amber-400 text-white font-medium shadow-sm active:scale-[0.98]"
                     onClick={() => {
                       if (!user) {
                         alert.error('กรุณาเข้าสู่ระบบ');
@@ -371,17 +371,17 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                       setShowContact(true);
                     }}
                   >
-                    <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Eye className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">ดูติดต่อ</span>
                   </Button>
                 ) : (
                   <Button
                     size="sm"
-                    className="flex-1 font-prompt gap-1 text-[9px] sm:text-xs h-7 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500 text-white font-medium shadow-sm active:scale-[0.98]"
+                    className="flex-1 font-prompt gap-1 text-[8px] sm:text-xs h-6.5 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500 text-white font-medium shadow-sm active:scale-[0.98]"
                     asChild
                   >
                     <a href={`tel:${contactPhone}`}>
-                      <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <MessageCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
                       <span className="hidden sm:inline">โทร</span>
                     </a>
                   </Button>
@@ -390,7 +390,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 font-prompt gap-1 text-[9px] sm:text-xs h-7 sm:h-10 rounded-lg sm:rounded-xl border border-orange-200 text-orange-500 bg-orange-50/50 active:scale-[0.98]"
+                    className="flex-1 font-prompt gap-1 text-[8px] sm:text-xs h-6.5 sm:h-10 rounded-lg sm:rounded-xl border border-orange-200 text-orange-500 bg-orange-50/50 active:scale-[0.98]"
                     disabled={createConversation.isPending}
                     onClick={() => {
                       if (!user) {
@@ -412,7 +412,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                       );
                     }}
                   >
-                    <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <MessageCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">แชท</span>
                   </Button>
                 )}
@@ -425,7 +425,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full font-prompt gap-1 text-[9px] sm:text-xs h-6 sm:h-9 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 active:scale-[0.98]"
+                  className="w-full font-prompt gap-1 text-[8px] sm:text-xs h-6 sm:h-9 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 active:scale-[0.98]"
                   aria-label="แชร์"
                 >
                   <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
