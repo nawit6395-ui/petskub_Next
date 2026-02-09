@@ -264,7 +264,7 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-8 sm:py-12 bg-surface-cool">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {statCards.map(({ label, value, icon: Icon, accent, iconBg, valueColor }) => (
               <Card
                 key={label}
@@ -285,50 +285,50 @@ const Home = () => {
       </section>
 
       {/* Why Petskub Section */}
-      <section className="py-16 bg-surface-warm">
+      <section className="py-8 sm:py-16 bg-surface-warm">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 font-prompt">ทำไมต้องใช้ Petskub? 💡</h2>
-            <p className="text-muted-foreground font-prompt max-w-2xl mx-auto">
+          <div className="text-center mb-6 sm:mb-12">
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-4 font-prompt">ทำไมต้องใช้ Petskub? 💡</h2>
+            <p className="text-xs sm:text-base text-muted-foreground font-prompt max-w-2xl mx-auto">
               แพลตฟอร์มสื่อกลางที่ช่วยเชื่อมโยงผู้ให้และผู้รับเลี้ยงสัตว์ ครบวงจรและใช้งานง่าย
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            <Card className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-hover">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
+            <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/60 bg-white/90 p-4 sm:p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-hover">
               <div className="absolute inset-0 bg-gradient-to-br from-sunrise/20 via-white/90 to-surface-warm opacity-80"></div>
               <div className="relative">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sunrise/20 text-sunrise mb-4">
-                  <Heart className="h-7 w-7" />
+                <div className="flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl bg-sunrise/20 text-sunrise mb-2 sm:mb-4">
+                  <Heart className="h-5 w-5 sm:h-7 sm:w-7" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 font-prompt">ค้นหาบ้านใหม่ได้ง่ายๆ</h3>
-                <p className="text-muted-foreground font-prompt text-sm leading-relaxed">
+                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-3 font-prompt">ค้นหาบ้านใหม่ได้ง่ายๆ</h3>
+                <p className="text-muted-foreground font-prompt text-xs sm:text-sm leading-relaxed">
                   แหล่งรวมหมาหาบ้านและแมวหาบ้านจากทั่วประเทศ มีระบบกรองค้นหาตามจังหวัด สายพันธุ์ และความเร่งด่วน ช่วยให้คุณพบสัตว์เลี้ยงที่ใช่ได้รวดเร็ว
                 </p>
               </div>
             </Card>
 
-            <Card className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-hover">
+            <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/60 bg-white/90 p-4 sm:p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-hover">
               <div className="absolute inset-0 bg-gradient-to-br from-mint/20 via-white/90 to-surface-mint opacity-80"></div>
               <div className="relative">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-mint/20 text-mint mb-4">
-                  <Plus className="h-7 w-7" />
+                <div className="flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl bg-mint/20 text-mint mb-2 sm:mb-4">
+                  <Plus className="h-5 w-5 sm:h-7 sm:w-7" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 font-prompt">ลงประกาศฟรี ไม่มีค่าใช้จ่าย</h3>
-                <p className="text-muted-foreground font-prompt text-sm leading-relaxed">
+                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-3 font-prompt">ลงประกาศฟรี ไม่มีค่าใช้จ่าย</h3>
+                <p className="text-muted-foreground font-prompt text-xs sm:text-sm leading-relaxed">
                   หากคุณพบเจอสัตว์จรจัด หรือต้องการหาบ้านให้ลูกสุนัขหรือลูกแมว สามารถลงประกาศหาบ้านได้ทันที ช่วยให้พวกเขาเจอเจ้าของใหม่ได้ไวขึ้น
                 </p>
               </div>
             </Card>
 
-            <Card className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-hover">
+            <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/60 bg-white/90 p-4 sm:p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-hover">
               <div className="absolute inset-0 bg-gradient-to-br from-lilac/20 via-white/90 to-surface-lilac opacity-80"></div>
               <div className="relative">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-lilac/20 text-lilac mb-4">
-                  <MapPin className="h-7 w-7" />
+                <div className="flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl bg-lilac/20 text-lilac mb-2 sm:mb-4">
+                  <MapPin className="h-5 w-5 sm:h-7 sm:w-7" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 font-prompt">แจ้งพิกัดสัตว์จรจัด</h3>
-                <p className="text-muted-foreground font-prompt text-sm leading-relaxed">
+                <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-3 font-prompt">แจ้งพิกัดสัตว์จรจัด</h3>
+                <p className="text-muted-foreground font-prompt text-xs sm:text-sm leading-relaxed">
                   ระบบแจ้งเตือนจุดพบสัตว์จร เพื่อระดมความช่วยเหลือจากอาสาสมัครในพื้นที่ ไม่ว่าจะเป็นการหาบ้าน การรักษา หรือการทำหมัน
                 </p>
               </div>
@@ -354,7 +354,7 @@ const Home = () => {
           </div>
 
           {urgentCats && urgentCats.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
               {urgentCats.map((cat) => (
                 <CatCard
                   key={cat.id}

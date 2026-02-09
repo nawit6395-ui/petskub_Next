@@ -47,7 +47,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
     const now = new Date();
     const diffInMs = now.getTime() - date.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    
+
     if (diffInDays === 0) return 'วันนี้';
     if (diffInDays === 1) return 'เมื่อวาน';
     if (diffInDays < 7) return `${diffInDays} วันที่แล้ว`;
@@ -56,6 +56,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
   };
   const [showContact, setShowContact] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [storyExpanded, setStoryExpanded] = useState(false);
   const updateCat = useUpdateCat();
   const deleteCat = useDeleteCat();
   const isAdmin = useIsAdmin();
@@ -185,7 +186,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
   return (
     <>
       <Card className={`group overflow-hidden border-0 rounded-2xl sm:rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] sm:hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 sm:duration-500 ease-out ${isAdopted ? 'ring-2 ring-emerald-200' : 'hover:-translate-y-0.5 sm:hover:-translate-y-1'}`}>
-        <div className={`relative w-full aspect-[16/10] xs:aspect-[4/3] overflow-hidden ${isAdopted ? '' : 'group-hover:brightness-105'}`}>
+        <div className={`relative w-full aspect-[16/9] sm:aspect-[4/3] overflow-hidden ${isAdopted ? '' : 'group-hover:brightness-105'}`}>
           <Image
             src={firstImage}
             alt={`${name}-สัตว์เลี้ยงหาบ้าน-${province}${district ? `-${district}` : ''}-Petskub`}
@@ -195,7 +196,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
             onClick={() => displayImages.length > 1 && setGalleryOpen(true)}
             priority={false}
           />
-          
+
           {/* Gradient overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
 
@@ -257,11 +258,11 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
           </div>
         </div>
 
-        <div className="p-3 sm:p-4 md:p-5 space-y-2.5 sm:space-y-3 md:space-y-4">
+        <div className="p-2 sm:p-4 md:p-5 space-y-1 sm:space-y-3 md:space-y-4">
           {/* Header: Name and status */}
-          <div className="space-y-1.5 sm:space-y-2">
+          <div className="space-y-1 sm:space-y-2">
             <div className="flex items-start sm:items-center justify-between gap-2">
-              <h3 className="font-bold text-base sm:text-lg md:text-xl font-prompt text-slate-800 truncate leading-tight">{name}</h3>
+              <h3 className="font-bold text-xs sm:text-lg md:text-xl font-prompt text-slate-800 truncate leading-tight">{name}</h3>
               <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                 {isSterilized && (
                   <span className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-100 text-emerald-600" title="ทำหมันแล้ว">
@@ -275,65 +276,53 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
               </div>
             </div>
 
-            {/* Location */}
-            <div className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-slate-500 font-prompt">
-              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400 shrink-0" />
-              <span className="truncate">{province}{district ? ` • ${district}` : ''}</span>
+            {/* Location + Info inline */}
+            <div className="flex items-center gap-1.5 text-[9px] sm:text-sm text-slate-500 font-prompt">
+              <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-orange-400 shrink-0" />
+              <span className="truncate">{province}</span>
+              <span className="text-slate-300 hidden sm:inline">•</span>
+              <span className="hidden sm:inline truncate">{district}</span>
             </div>
           </div>
 
-          {/* Info grid */}
-          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-            <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-50 rounded-lg sm:rounded-xl px-2 sm:px-3 py-1.5 sm:py-2">
-              <span className="text-sm sm:text-base">🎂</span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[9px] sm:text-[10px] text-slate-400 font-prompt leading-tight">อายุ</p>
-                <p className="text-xs sm:text-sm font-semibold text-slate-700 font-prompt truncate">{age}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-50 rounded-lg sm:rounded-xl px-2 sm:px-3 py-1.5 sm:py-2">
-              <span className="text-sm sm:text-base">💊</span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[9px] sm:text-[10px] text-slate-400 font-prompt leading-tight">สุขภาพ</p>
-                <p className="text-xs sm:text-sm font-semibold text-slate-700 font-prompt truncate">{healthStatus || 'ดี'}</p>
-              </div>
-            </div>
+          {/* Compact info row */}
+          <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-[9px] sm:text-xs text-slate-500 font-prompt">
+            <span>🎂 {age}</span>
+            <span className="text-slate-300">•</span>
+            <span className="truncate">💊 {healthStatus || 'ดี'}</span>
+            {createdAt && (
+              <>
+                <span className="text-slate-300 hidden sm:inline">•</span>
+                <span className="hidden sm:inline">🕐 {formatDate(createdAt)}</span>
+              </>
+            )}
           </div>
 
-          {/* Posted date */}
-          {createdAt && (
-            <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-slate-400 font-prompt">
-              <span>🕐</span>
-              <span>ลงประกาศ {formatDate(createdAt)}</span>
-            </div>
-          )}
-
-          {/* Story */}
           {story && (
-            <div className="relative">
-              <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 font-prompt leading-relaxed">
-                "{story}"
-              </p>
-            </div>
+            <p className={`text-[9px] sm:text-sm text-slate-500 font-prompt leading-relaxed ${!storyExpanded && story.length > 60 ? 'line-clamp-1 sm:line-clamp-2' : ''}`}>
+              "{story.length > 40 && !storyExpanded ? story.substring(0, 40) + '...' : story}"
+              {story.length > 40 && (
+                <button
+                  type="button"
+                  onClick={() => setStoryExpanded(!storyExpanded)}
+                  className="ml-1 text-orange-500 hover:text-orange-600 font-medium"
+                >
+                  {storyExpanded ? 'ย่อ' : 'เพิ่มเติม'}
+                </button>
+              )}
+            </p>
           )}
 
-          {/* Contact info panel */}
           {user && showContact && contactPhone && (
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 border border-emerald-100">
-              <p className="text-[10px] sm:text-xs font-semibold text-emerald-700 font-prompt mb-1.5 sm:mb-2 flex items-center gap-1 sm:gap-1.5">
-                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] sm:text-[10px]">✓</span>
-                ข้อมูลติดต่อ
-              </p>
-              <div className="space-y-1 sm:space-y-1.5">
-                {contactName && <p className="text-xs sm:text-sm font-medium text-slate-700 font-prompt truncate">👤 {contactName}</p>}
-                <p className="text-xs sm:text-sm font-medium text-slate-700 font-prompt">📱 {contactPhone}</p>
-                {contactLine && <p className="text-xs sm:text-sm font-medium text-slate-700 font-prompt truncate">💬 LINE: {contactLine}</p>}
-              </div>
+            <div className="bg-emerald-50 rounded-lg sm:rounded-xl p-2 sm:p-3 text-[9px] sm:text-xs text-emerald-700 font-prompt space-y-0.5 sm:space-y-1">
+              {contactName && <p className="truncate">👤 {contactName}</p>}
+              <p>📱 {contactPhone}</p>
+              {contactLine && <p className="truncate">💬 {contactLine}</p>}
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="space-y-1.5 sm:space-y-2 pt-2 sm:pt-3 border-t border-slate-100">
+          <div className="space-y-1 sm:space-y-2 pt-1.5 sm:pt-3 border-t border-slate-100">
             {/* Status Management for Owner and Admin */}
             {canManageStatus && (
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -368,83 +357,79 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
               </div>
             )}
 
-            {/* Contact Buttons */}
             {!isAdopted && (
-              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+              <div className="flex gap-1 sm:gap-2">
                 {!showContact ? (
                   <Button
                     size="sm"
-                    className="col-span-1 font-prompt gap-1 sm:gap-2 text-[10px] sm:text-xs h-9 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-r from-orange-400 to-amber-400 text-white font-medium shadow-md shadow-orange-200/50 hover:shadow-lg hover:shadow-orange-200/60 active:scale-[0.98] sm:hover:-translate-y-0.5 transition-all"
+                    className="flex-1 font-prompt gap-1 text-[9px] sm:text-xs h-7 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-orange-400 to-amber-400 text-white font-medium shadow-sm active:scale-[0.98]"
                     onClick={() => {
                       if (!user) {
-                        alert.error('กรุณาเข้าสู่ระบบเพื่อดูข้อมูลติดต่อ');
+                        alert.error('กรุณาเข้าสู่ระบบ');
                         return;
                       }
                       setShowContact(true);
                     }}
                   >
-                    <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <span>ดูติดต่อ</span>
+                    <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">ดูติดต่อ</span>
                   </Button>
                 ) : (
                   <Button
                     size="sm"
-                    className="col-span-1 font-prompt gap-1 sm:gap-2 text-[10px] sm:text-xs h-9 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium shadow-md shadow-emerald-200/50 hover:shadow-lg active:scale-[0.98] sm:hover:-translate-y-0.5 transition-all"
+                    className="flex-1 font-prompt gap-1 text-[9px] sm:text-xs h-7 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500 text-white font-medium shadow-sm active:scale-[0.98]"
                     asChild
                   >
                     <a href={`tel:${contactPhone}`}>
-                      <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span>โทรเลย</span>
+                      <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="hidden sm:inline">โทร</span>
                     </a>
                   </Button>
                 )}
-                {canStartChat ? (
+                {canStartChat && (
                   <Button
                     variant="outline"
                     size="sm"
-                    className="col-span-1 font-prompt gap-1 sm:gap-2 text-[10px] sm:text-xs h-9 sm:h-11 rounded-lg sm:rounded-xl border-2 border-orange-200 text-orange-600 bg-orange-50/50 hover:bg-orange-100 active:scale-[0.98] sm:hover:-translate-y-0.5 transition-all"
+                    className="flex-1 font-prompt gap-1 text-[9px] sm:text-xs h-7 sm:h-10 rounded-lg sm:rounded-xl border border-orange-200 text-orange-500 bg-orange-50/50 active:scale-[0.98]"
                     disabled={createConversation.isPending}
                     onClick={() => {
                       if (!user) {
-                        alert.error('กรุณาเข้าสู่ระบบเพื่อเริ่มแชท');
+                        alert.error('กรุณาเข้าสู่ระบบ');
                         router.push('/login');
                         return;
                       }
                       if (!id || !userId) {
-                        alert.error('ไม่พบข้อมูลเจ้าของสัตว์เลี้ยง');
+                        alert.error('ไม่พบข้อมูล');
                         return;
                       }
                       createConversation.mutate(
                         { catId: id, ownerId: userId, adopterId: user.id },
                         {
                           onSuccess: (conversation) => {
-                            alert.success('เปิดห้องแชทกับเจ้าของแล้ว');
                             router.push(`/chat?conversationId=${conversation.id}`);
                           },
                         }
                       );
                     }}
                   >
-                    <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <span>แชท</span>
+                    <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">แชท</span>
                   </Button>
-                ) : (
-                  <div className="col-span-1" />
                 )}
               </div>
             )}
 
-            {/* Share Button - แสดงทุกการ์ดโดยไม่ต้อง login */}
+            {/* Share Button */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full font-prompt gap-1.5 sm:gap-2 text-[10px] sm:text-xs h-8 sm:h-10 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-all active:scale-[0.98]"
-                  aria-label="แชร์ช่วยหาบ้าน"
+                  className="w-full font-prompt gap-1 text-[9px] sm:text-xs h-6 sm:h-9 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 active:scale-[0.98]"
+                  aria-label="แชร์"
                 >
-                  <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span>แชร์ช่วยหาบ้าน</span>
+                  <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="sm:inline">แชร์</span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="center" sideOffset={8} className="w-[calc(100vw-2rem)] max-w-64 rounded-xl sm:rounded-2xl border-0 bg-white shadow-2xl p-0 overflow-hidden">

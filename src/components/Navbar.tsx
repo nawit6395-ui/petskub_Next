@@ -49,215 +49,10 @@ const Navbar = () => {
   const adminLinks = isAdmin ? [{ path: "/admin", label: "Admin" }] : [];
   const quickAction = { path: "/report", label: "แจ้งสัตว์จรทันที" };
 
+
   useEffect(() => {
-    // ... kept scroll logic code simplified/unchanged ...
-    const ENABLE_MOBILE_AUTO_SCROLL = false;
-    if (!ENABLE_MOBILE_AUTO_SCROLL) return;
-    if (typeof window === "undefined") return;
-    const container = mobileNavScrollRef.current;
-    if (!container) return;
-
-    // ... (logic omitted for brevity but preserved in final file if I was editing blocks, here I am replacing full file, so I need to include it)
-    // Actually, to be safe and avoid regression, I'll copy the logic precisely.
-    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mobileWidthQuery = window.matchMedia("(max-width: 640px)");
-    let rafId: number | null = null;
-    let resumeTimeout: number | null = null;
-    let lastTimestamp: number | null = null;
-    let isAutoScrolling = false;
-    let isPaused = false;
-    let loopWidth = 0;
-
-    const SCROLL_DURATION = 20000;
-    const RESUME_DELAY = 2500;
-
-    const measureLoopWidth = () => {
-      if (!container) return 0;
-      const children = Array.from(container.children);
-      if (children.length === 0) return 0;
-      const half = Math.floor(children.length / 2);
-      if (half === 0) return 0;
-      let total = 0;
-      for (let i = 0; i < half; i++) {
-        const child = children[i] as HTMLElement;
-        total += child.getBoundingClientRect().width;
-      }
-      loopWidth = total;
-      return total;
-    };
-
-    const hasOverflow = () => {
-      const baseWidth = loopWidth || measureLoopWidth();
-      return container.clientWidth < baseWidth;
-    };
-
-    const ensureInitialPosition = () => {
-      if (!loopWidth) return;
-      if (container.scrollLeft <= 0 || container.scrollLeft >= loopWidth * 2) {
-        container.scrollLeft = loopWidth;
-      }
-    };
-
-    const stopAnimation = () => {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-      lastTimestamp = null;
-    };
-
-    const startAnimation = () => {
-      if (!mobileWidthQuery.matches || reduceMotionQuery.matches) {
-        stopAnimation();
-        return;
-      }
-      if (!hasOverflow()) {
-        stopAnimation();
-        container.scrollLeft = 0;
-        return;
-      }
-      if (rafId !== null || isPaused) return;
-      ensureInitialPosition();
-      lastTimestamp = null;
-      const step = (timestamp: number) => {
-        if (!container || isPaused || !mobileWidthQuery.matches || reduceMotionQuery.matches) {
-          stopAnimation();
-          return;
-        }
-        if (!hasOverflow()) {
-          stopAnimation();
-          container.scrollLeft = 0;
-          return;
-        }
-        if (!lastTimestamp) {
-          lastTimestamp = timestamp;
-        }
-        const delta = timestamp - lastTimestamp;
-        lastTimestamp = timestamp;
-        const cycleWidth = loopWidth || measureLoopWidth();
-        const increment = (cycleWidth / SCROLL_DURATION) * delta;
-        isAutoScrolling = true;
-        let nextPosition = container.scrollLeft - increment;
-        while (nextPosition < 0) {
-          nextPosition += cycleWidth;
-        }
-        container.scrollLeft = nextPosition;
-        isAutoScrolling = false;
-        rafId = requestAnimationFrame(step);
-      };
-      rafId = requestAnimationFrame(step);
-    };
-
-    const pauseAnimation = () => {
-      isPaused = true;
-      stopAnimation();
-    };
-
-    const scheduleResume = () => {
-      if (reduceMotionQuery.matches) return;
-      if (resumeTimeout) {
-        window.clearTimeout(resumeTimeout);
-      }
-      resumeTimeout = window.setTimeout(() => {
-        if (!hasOverflow()) return;
-        isPaused = false;
-        startAnimation();
-      }, RESUME_DELAY);
-    };
-
-    const handlePointerDown = () => {
-      pauseAnimation();
-      if (resumeTimeout) {
-        window.clearTimeout(resumeTimeout);
-      }
-    };
-
-    const handlePointerUp = () => {
-      scheduleResume();
-    };
-
-    const handleWheel = () => {
-      pauseAnimation();
-      scheduleResume();
-    };
-
-    const handleScroll = () => {
-      if (isAutoScrolling) return;
-      pauseAnimation();
-      scheduleResume();
-    };
-
-    const handleMediaChange = () => {
-      if (mobileWidthQuery.matches && !reduceMotionQuery.matches) {
-        measureLoopWidth();
-        isPaused = false;
-        startAnimation();
-      } else {
-        pauseAnimation();
-      }
-    };
-
-    const handleReduceMotionChange = () => {
-      if (reduceMotionQuery.matches) {
-        pauseAnimation();
-      } else {
-        scheduleResume();
-      }
-    };
-
-    const addMediaListener = (mediaQuery: MediaQueryList, listener: () => void) => {
-      if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener("change", listener);
-      } else {
-        mediaQuery.addListener(listener);
-      }
-    };
-
-    const removeMediaListener = (mediaQuery: MediaQueryList, listener: () => void) => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener("change", listener);
-      } else {
-        mediaQuery.removeListener(listener);
-      }
-    };
-
-    container.addEventListener("pointerdown", handlePointerDown);
-    container.addEventListener("pointerup", handlePointerUp);
-    container.addEventListener("pointerleave", handlePointerUp);
-    container.addEventListener("touchend", handlePointerUp);
-    container.addEventListener("wheel", handleWheel, { passive: true });
-    container.addEventListener("scroll", handleScroll);
-    addMediaListener(mobileWidthQuery, handleMediaChange);
-    addMediaListener(reduceMotionQuery, handleReduceMotionChange);
-
-    const resizeObserver = new ResizeObserver(() => {
-      loopWidth = 0;
-      if (!hasOverflow()) {
-        pauseAnimation();
-        container.scrollLeft = 0;
-      } else {
-        scheduleResume();
-      }
-    });
-    resizeObserver.observe(container);
-
-    handleMediaChange();
-
-    return () => {
-      container.removeEventListener("pointerdown", handlePointerDown);
-      container.removeEventListener("pointerup", handlePointerUp);
-      container.removeEventListener("pointerleave", handlePointerUp);
-      container.removeEventListener("touchend", handlePointerUp);
-      container.removeEventListener("wheel", handleWheel);
-      container.removeEventListener("scroll", handleScroll);
-      removeMediaListener(mobileWidthQuery, handleMediaChange);
-      removeMediaListener(reduceMotionQuery, handleReduceMotionChange);
-      resizeObserver.disconnect();
-      if (resumeTimeout) {
-        window.clearTimeout(resumeTimeout);
-      }
-      stopAnimation();
-    };
+    // Mobile menu effect or other logic can go here if needed.
+    // Auto-scroll logic removed.
   }, []);
 
   const getNavClasses = (path: string) =>
@@ -291,61 +86,75 @@ const Navbar = () => {
                       <SheetTitle>เมนูนำทาง</SheetTitle>
                       <SheetDescription>เลือกหมวดหมู่สำหรับการใช้งานบนมือถือ</SheetDescription>
                     </SheetHeader>
-                    <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6 space-y-4">
-                      {navLinks.map((link) => {
-                        const Icon = link.icon;
-                        return (
-                          <Link key={link.path} href={link.path} onClick={() => setMobileMenuOpen(false)}>
-                            <div
-                              className={cn(
-                                "flex items-center gap-3 rounded-2xl border border-gray-100 bg-white/90 px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
-                                isActive(link.path) && "border-primary/40 shadow-[0_12px_30px_rgba(244,162,89,0.25)]"
-                              )}
-                            >
-                              <span
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl text-xl"
-                                style={{ color: link.color }}
+
+                    <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 scrollbar-hide pb-24">
+                      <div className="flex flex-col gap-2 mb-4">
+                        {navLinks.map((link) => {
+                          const Icon = link.icon;
+                          const active = isActive(link.path);
+                          return (
+                            <Link key={link.path} href={link.path} onClick={() => setMobileMenuOpen(false)}>
+                              <div
+                                className={cn(
+                                  "flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 active:scale-[0.98]",
+                                  active
+                                    ? "bg-primary/5 text-primary font-bold shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-primary/10"
+                                    : "bg-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                )}
                               >
-                                <Icon className="w-5 h-5" aria-hidden="true" />
-                              </span>
-                              <span className="text-base font-semibold text-foreground flex-1">{link.label}</span>
-                              {isActive(link.path) && (
-                                <span className="text-xs font-bold text-primary">กำลังดู</span>
-                              )}
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                    {adminLinks.length > 0 && (
-                      <div className="border-t border-muted/40 px-6 py-4">
-                        <p className="text-sm font-semibold text-muted-foreground mb-3">Admin</p>
-                        {adminLinks.map((link) => (
-                          <Link key={link.path} href={link.path} onClick={() => setMobileMenuOpen(false)}>
-                            <Button
-                              variant={isActive(link.path) ? "secondary" : "outline"}
-                              className="w-full justify-start text-base font-nav font-semibold rounded-2xl"
-                            >
-                              {link.label}
-                            </Button>
-                          </Link>
-                        ))}
+                                <span
+                                  className="flex h-10 w-10 items-center justify-center rounded-full text-xl transition-all shadow-sm"
+                                  style={{
+                                    backgroundColor: active ? link.color : hexToRgba(link.color, 0.12),
+                                    color: active ? '#ffffff' : link.color
+                                  }}
+                                >
+                                  <Icon className="w-5 h-5" aria-hidden="true" />
+                                </span>
+                                <span className={cn(
+                                  "text-base font-medium",
+                                  active ? "text-primary" : "text-slate-600"
+                                )}>
+                                  {link.label}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
                       </div>
-                    )}
-                    <div
-                      className="border-t px-6 pt-6"
-                      style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0) + 1.5rem)" }}
-                    >
-                      <div className="rounded-3xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 p-1 shadow-[0_15px_30px_rgba(234,88,12,0.35)]">
+
+                      {adminLinks.length > 0 && (
+                        <div className="border-t border-muted/40 pt-4 mt-2">
+                          <p className="text-sm font-semibold text-muted-foreground mb-2 px-2">เมนูผู้ดูแลระบบ</p>
+                          <div className="space-y-1">
+                            {adminLinks.map((link) => (
+                              <Link key={link.path} href={link.path} onClick={() => setMobileMenuOpen(false)}>
+                                <Button
+                                  variant={isActive(link.path) ? "secondary" : "ghost"}
+                                  className="w-full justify-start text-base font-nav font-medium rounded-xl h-11"
+                                >
+                                  {link.label}
+                                </Button>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-6 pt-4 pb-8 bg-gradient-to-t from-white via-white to-white/90 border-t border-slate-100/50 backdrop-blur-sm z-20">
+                      <div className="rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 p-0.5 shadow-lg shadow-orange-500/20 active:scale-[0.98] transition-all">
                         <Button
                           asChild
-                          className="w-full rounded-3xl bg-transparent font-prompt text-white hover:bg-white/10"
+                          className="w-full h-12 rounded-xl bg-white hover:bg-white/90 text-primary font-bold border-none"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           <Link href={quickAction.path}>
-                            <div className="flex items-center justify-center gap-2">
-                              <Sparkles className="h-4 w-4" />
-                              {quickAction.label}
+                            <div className="flex items-center justify-center gap-2 text-lg">
+                              <Sparkles className="h-5 w-5 text-orange-500" />
+                              <span className="bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 bg-clip-text text-transparent">
+                                {quickAction.label}
+                              </span>
                             </div>
                           </Link>
                         </Button>
@@ -461,40 +270,8 @@ const Navbar = () => {
             )}
           </div>
 
+
           <div className="md:hidden flex flex-col gap-2">
-            <div
-              ref={mobileNavScrollRef}
-              className="flex items-center gap-2 overflow-x-auto pb-1"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {mobileNavItems.map((link, index) => {
-                const isClone = index >= navLinks.length;
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={`${link.path}-${index}`}
-                    href={link.path}
-                    className="flex-shrink-0 w-[140px]"
-                    tabIndex={isClone ? -1 : undefined}
-                    aria-hidden={isClone ? "true" : undefined}
-                  >
-                    <Button
-                      variant="ghost"
-                      className={cn(getNavClasses(link.path), "w-full justify-center text-xs")}
-                      aria-current={!isClone && isActive(link.path) ? "page" : undefined}
-                    >
-                      <span
-                        className="inline-flex items-center justify-center h-7 w-7 rounded-full"
-                        style={{ backgroundColor: hexToRgba(link.color, 0.12), color: link.color }}
-                      >
-                        <Icon className="w-4 h-4" aria-hidden="true" />
-                      </span>
-                      {link.label}
-                    </Button>
-                  </Link>
-                );
-              })}
-            </div>
             <Button
               asChild
               className="w-full rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 font-prompt text-white shadow-[0_10px_25px_rgba(234,88,12,0.4)]"
@@ -507,9 +284,9 @@ const Navbar = () => {
               </Link>
             </Button>
           </div>
-        </div>
-      </div>
-    </nav>
+        </div >
+      </div >
+    </nav >
   );
 };
 
