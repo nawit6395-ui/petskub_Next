@@ -1,12 +1,11 @@
-"use client";
-
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { MapPin, Heart, MessageCircle, Eye, Check, RotateCcw, ShieldCheck, Share2, Trash2 } from "lucide-react";
+import { MapPin, Heart, MessageCircle, Eye, Check, RotateCcw, ShieldCheck, Share2, Trash2, Play, Flame, Phone } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
 import { ImageGallery } from "@/components/ImageGallery";
 import { useDeleteCat, useUpdateCat } from "@shared/hooks/useCats";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -15,30 +14,62 @@ import { useCreateConversation } from "@/hooks/useConversations";
 import { useRouter } from "next/navigation";
 import { FaFacebookF, FaLine } from "react-icons/fa";
 import Image from "next/image";
+import { useFavorites } from "@/hooks/useFavorites";
+import { supabase } from "@shared/integrations/supabase/client";
 
 interface CatCardProps {
   id?: string;
   name: string;
   age: string;
   province: string;
-  district?: string;
-  image?: string[];
-  images?: string[];
-  story?: string;
+  district?: string | null;
+  image?: string[] | null;
+  images?: string[] | null;
+  story?: string | null;
   gender: "ชาย" | "หญิง" | "ไม่ระบุ";
   isAdopted?: boolean;
   urgent?: boolean;
   contactName?: string;
   contactPhone?: string;
-  contactLine?: string;
+  contactLine?: string | null;
   userId?: string;
-  healthStatus?: string;
+  healthStatus?: string | null;
   isSterilized?: boolean;
   createdAt?: string;
+  views?: number; // New prop for views
+  hasVideo?: boolean; // New prop for video
 }
 
-const CatCard = ({ id, name, age, province, district, image, images, story, gender, isAdopted, urgent, contactName, contactPhone, contactLine, userId, healthStatus, isSterilized, createdAt }: CatCardProps) => {
+const CatCard = ({ id, name, age, province, district, image, images, story, gender, isAdopted, urgent, contactName, contactPhone, contactLine, userId, healthStatus, isSterilized, createdAt, views, hasVideo }: CatCardProps) => {
   const { user } = useAuth();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isFav = id ? isFavorite(id) : false;
+  const router = useRouter();
+
+  // Real views from props or incremented locally? 
+  // We use prop 'views' if available. If not, fallback to 0. 
+  const [displayViews, setDisplayViews] = useState(views || 0);
+
+  useEffect(() => {
+    // Increment view count on mount
+    const incrementView = async () => {
+      if (!id) return;
+      try {
+        await supabase.rpc('increment_cat_views' as any, { cat_id: id });
+      } catch (error) {
+        console.error("Error incrementing view:", error);
+      }
+    };
+
+    incrementView();
+  }, [id]);
+
+  useEffect(() => {
+    if (views !== undefined) {
+      setDisplayViews(views);
+    }
+  }, [views]);
+
 
   // Format date helper
   const formatDate = (dateString?: string) => {
@@ -54,18 +85,44 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
     if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} สัปดาห์ที่แล้ว`;
     return date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
   };
+
+  const isNew = createdAt ? (new Date().getTime() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24) < 2 : false;
+
   const [showContact, setShowContact] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [storyExpanded, setStoryExpanded] = useState(false);
   const updateCat = useUpdateCat();
   const deleteCat = useDeleteCat();
   const isAdmin = useIsAdmin();
-  const router = useRouter();
   const createConversation = useCreateConversation();
 
   const isOwner = user?.id === userId;
   const canManageStatus = isOwner || isAdmin;
   const canStartChat = Boolean(id && userId && !isOwner && !isAdopted);
+
+  // SEO Schema Markup
+  const structuredData = {
+    "@context": "https://schema.org/",
+    "@type": "Product", // Applied Product schema for rich snippets
+    "name": `${name} - ${gender} ${age} หาบ้าน`,
+    "image": images && images.length > 0 ? images : image,
+    "description": story || `น้องแมว ${name} กำลังหาบ้าน อายุ ${age} เพศ${gender} พิกัด ${province}`,
+    "brand": {
+      "@type": "Brand",
+      "name": "Petskub"
+    },
+    "mask": {
+      "@type": "Product",
+      "name": "Cat"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "THB",
+      "price": "0",
+      "availability": isAdopted ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+      "url": typeof window !== "undefined" ? `${window.location.origin}/adopt` : ""
+    }
+  };
 
   const handleMarkAsAdopted = async () => {
     if (!id || !canManageStatus) return;
@@ -185,11 +242,15 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Card className={`group overflow-hidden border-0 rounded-2xl sm:rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] sm:hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 sm:duration-500 ease-out ${isAdopted ? 'ring-2 ring-emerald-200' : 'hover:-translate-y-0.5 sm:hover:-translate-y-1'}`}>
         <div className={`relative w-full aspect-[3/2] sm:aspect-[4/3] overflow-hidden ${isAdopted ? '' : 'group-hover:brightness-105'}`}>
           <Image
             src={firstImage}
-            alt={`${name}-สัตว์เลี้ยงหาบ้าน-${province}${district ? `-${district}` : ''}-Petskub`}
+            alt={`${name} แมวหาบ้าน ${province} ${district ? district : ''} ${gender} ${age} - Petskub`}
             fill
             sizes="(max-width: 480px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className={`object-cover transition-transform duration-300 sm:duration-500 ${displayImages.length > 1 ? 'cursor-pointer' : ''} ${isAdopted ? 'brightness-[0.85] saturate-75' : 'group-hover:scale-[1.03] sm:group-hover:scale-105'}`}
@@ -199,6 +260,36 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
 
           {/* Gradient overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+
+          {/* Video Indicator */}
+          {hasVideo && !isAdopted && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/20">
+                <Play className="w-4 h-4 sm:w-5 sm:h-5 text-white fill-white ml-0.5" />
+              </div>
+            </div>
+          )}
+
+          {/* Favorite Button */}
+          {!isOwner && !isAdopted && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!user) {
+                  alert.error('กรุณาเข้าสู่ระบบ', {
+                    description: 'คุณต้องเข้าสู่ระบบเพื่อบันทึกรายการโปรด'
+                  });
+                  return;
+                }
+                if (id) toggleFavorite(id, name);
+              }}
+              className="absolute top-1.5 right-1.5 z-10 p-1 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-sm transition-all active:scale-95 group/fav"
+            >
+              <Heart
+                className={`w-3.5 h-3.5 transition-colors ${isFav ? "fill-rose-500 text-rose-500" : "text-slate-400 group-hover/fav:text-rose-500"}`}
+              />
+            </button>
+          )}
 
           {/* Adopted Overlay */}
           {isAdopted && (
@@ -217,152 +308,157 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
           {displayImages.length > 1 && (
             <button
               type="button"
-              className="absolute bottom-1 left-1 sm:bottom-3 sm:left-3 flex items-center gap-0.5 sm:gap-1.5 bg-black/60 backdrop-blur-md text-white border-0 font-prompt cursor-pointer z-10 text-[8px] sm:text-xs px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full shadow-lg hover:bg-black/75 transition-colors active:scale-95"
+              className="absolute bottom-1.5 left-1.5 flex items-center gap-0.5 bg-black/60 backdrop-blur-md text-white border border-white/20 font-prompt cursor-pointer z-10 text-[8px] px-1 py-px rounded-full hover:bg-black/75 transition-colors active:scale-95 shadow-sm"
               onClick={() => setGalleryOpen(true)}
             >
-              <span className="text-[9px] sm:text-sm">📷</span>
-              <span className="font-medium text-[8px] sm:text-xs">{displayImages.length}</span>
+              <span className="text-[8px]">📷</span>
+              <span className="font-medium">{displayImages.length}</span>
             </button>
           )}
 
-          {/* Admin delete button */}
+          {/* Admin delete button - Discreet Top Left */}
           {isAdmin && id && (
             <Button
               type="button"
               size="icon"
               variant="ghost"
-              className="absolute top-2 right-2 sm:top-3 sm:right-3 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-white/95 text-rose-500 hover:bg-rose-50 hover:text-rose-600 shadow-lg backdrop-blur-sm transition-all active:scale-95"
+              className="absolute top-1.5 left-1.5 h-5 w-5 rounded-full bg-black/20 text-white/90 hover:bg-rose-500 hover:text-white backdrop-blur-sm transition-all active:scale-95 z-20"
               onClick={(event) => {
                 event.stopPropagation();
                 handleDeleteCat();
               }}
               disabled={deleteCat.isPending}
             >
-              <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <Trash2 className="h-2.5 w-2.5" />
               <span className="sr-only">ลบประกาศ</span>
             </Button>
           )}
 
-          {/* Urgent badge */}
-          {urgent && !isAdopted && (
-            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 flex items-center gap-0.5 sm:gap-1.5 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-prompt text-[8px] sm:text-xs font-semibold px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full shadow-lg animate-pulse">
-              <span className="w-1 h-1 sm:w-2 sm:h-2 bg-white rounded-full animate-ping" />
-              <span>ด่วน</span>
-            </div>
-          )}
-
-          {/* Gender badge on image */}
-          <div className="absolute bottom-1 right-1 sm:bottom-3 sm:right-3 flex items-center gap-0.5 sm:gap-1.5 bg-white/95 backdrop-blur-sm text-slate-700 font-prompt text-[8px] sm:text-xs font-medium px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full shadow-lg">
-            <span className="text-[10px] sm:text-sm">{gender === 'ชาย' ? '♂️' : gender === 'หญิง' ? '♀️' : '⚪'}</span>
-            <span className="hidden xs:inline">{gender}</span>
-          </div>
-        </div>
-
-        <div className="p-2 sm:p-4 md:p-5 space-y-1 sm:space-y-3 md:space-y-4">
-          {/* Header: Name and status */}
-          <div className="space-y-1 sm:space-y-2">
-            <div className="flex items-start sm:items-center justify-between gap-2">
-              <h3 className="font-bold text-xs sm:text-lg md:text-xl font-prompt text-slate-800 truncate leading-tight">{name}</h3>
-              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-                {isSterilized && (
-                  <span className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-100 text-emerald-600" title="ทำหมันแล้ว">
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" strokeWidth={3} />
-                  </span>
-                )}
-                <span className={`inline-flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium font-prompt ${isAdopted ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                  <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill={isAdopted ? 'currentColor' : 'none'} />
-                  <span className="hidden xs:inline">{isAdopted ? 'มีบ้านแล้ว' : 'หาบ้าน'}</span>
-                </span>
+          {/* Urgent & New Badges - Overlay on Image (Clear of Delete Button) */}
+          <div className={`absolute top-1.5 ${isAdmin ? 'left-7' : 'left-1.5'} flex flex-col gap-1 items-start z-10`}>
+            {urgent && !isAdopted && (
+              <div className="flex items-center gap-0.5 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-prompt text-[8px] font-bold px-1 py-px rounded shadow-sm animate-pulse border border-white/20">
+                <span>🔥 ด่วน</span>
               </div>
-            </div>
-
-            {/* Location + Info inline */}
-            <div className="flex items-center gap-1.5 text-[9px] sm:text-sm text-slate-500 font-prompt">
-              <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-orange-400 shrink-0" />
-              <span className="truncate">{province}</span>
-              <span className="text-slate-300 hidden sm:inline">•</span>
-              <span className="hidden sm:inline truncate">{district}</span>
-            </div>
-          </div>
-
-          {/* Compact info row */}
-          <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-[9px] sm:text-xs text-slate-500 font-prompt">
-            <span>🎂 {age}</span>
-            <span className="text-slate-300">•</span>
-            <span className="truncate">💊 {healthStatus || 'ดี'}</span>
-            {createdAt && (
-              <>
-                <span className="text-slate-300 hidden sm:inline">•</span>
-                <span className="hidden sm:inline">🕐 {formatDate(createdAt)}</span>
-              </>
+            )}
+            {isNew && !isAdopted && !urgent && (
+              <div className="flex items-center gap-0.5 bg-blue-500/90 backdrop-blur-sm text-white font-prompt text-[8px] font-bold px-1 py-px rounded shadow-sm border border-white/20">
+                <span>🆕 มาใหม่</span>
+              </div>
             )}
           </div>
 
-          {story && (
-            <p className={`text-[9px] sm:text-sm text-slate-500 font-prompt leading-relaxed ${!storyExpanded && story.length > 60 ? 'line-clamp-1 sm:line-clamp-2' : ''}`}>
-              "{story.length > 40 && !storyExpanded ? story.substring(0, 40) + '...' : story}"
-              {story.length > 40 && (
-                <button
-                  type="button"
-                  onClick={() => setStoryExpanded(!storyExpanded)}
-                  className="ml-1 text-orange-500 hover:text-orange-600 font-medium"
-                >
-                  {storyExpanded ? 'ย่อ' : 'เพิ่มเติม'}
-                </button>
+          {/* Gender Badge - Back on Image (Bottom Right) */}
+          <div className={`absolute bottom-1.5 right-1.5 flex items-center gap-0.5 backdrop-blur-md font-prompt text-[7px] font-bold px-1 py-px rounded-full shadow-sm border border-white/20 ${gender === 'ชาย' ? 'bg-blue-500/80 text-white' : gender === 'หญิง' ? 'bg-pink-500/80 text-white' : 'bg-slate-500/80 text-white'}`}>
+            <span>{gender === 'ชาย' ? '♂' : gender === 'หญิง' ? '♀' : '⚪'} {gender}</span>
+          </div>
+        </div>
+
+        <div className="px-3 pt-2 pb-2.5 space-y-1.5">
+          {/* Row 1: Name + Heart + "หาบ้าน" */}
+          <div className="flex items-center gap-1.5">
+            <h3 className="font-bold text-[13px] font-prompt text-slate-800 truncate leading-snug">{name}</h3>
+            {!isAdopted && (
+              <div className="flex items-center gap-1 shrink-0">
+                <Heart className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+                <span className="text-[10px] font-prompt text-orange-500 font-semibold">หาบ้าน</span>
+              </div>
+            )}
+          </div>
+
+          {/* Location Row */}
+          <div className="flex items-center gap-1 text-[11px] font-prompt text-slate-600">
+            <MapPin className="w-3 h-3 text-orange-400 shrink-0" />
+            <span className="truncate">{province}</span>
+          </div>
+
+          {/* Detail Bullets */}
+          <div className="text-[11px] font-prompt text-slate-500 space-y-0.5 pl-0.5">
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-300">·</span>
+              <span>{age}</span>
+              {isSterilized && (
+                <>
+                  <span className="text-slate-300">·</span>
+                  <span className="text-emerald-600">ö</span>
+                </>
               )}
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-300">·</span>
+              <span className="truncate">{healthStatus || 'แข็งแรง'}</span>
+              {isSterilized && (
+                <span className="inline-flex items-center gap-0.5 text-emerald-600">
+                  <Check className="w-2.5 h-2.5" /> ทำหมัน
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Story */}
+          {story && (
+            <p className="text-[10px] text-slate-400 font-prompt line-clamp-2 leading-relaxed">
+              "{story}"
             </p>
           )}
 
+          {/* Contact Info Expanded */}
           {user && showContact && contactPhone && (
-            <div className="bg-emerald-50 rounded-lg sm:rounded-xl p-2 sm:p-3 text-[9px] sm:text-xs text-emerald-700 font-prompt space-y-0.5 sm:space-y-1">
-              {contactName && <p className="truncate">👤 {contactName}</p>}
+            <div className="bg-emerald-50/80 rounded-md p-2 text-[10px] text-emerald-700 font-prompt space-y-0.5 border border-emerald-100">
+              {contactName && <p className="truncate font-medium">👤 {contactName}</p>}
               <p>📱 {contactPhone}</p>
               {contactLine && <p className="truncate">💬 {contactLine}</p>}
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="space-y-1 sm:space-y-2 pt-1.5 sm:pt-3 border-t border-slate-100">
-            {/* Status Management for Owner and Admin */}
-            {canManageStatus && (
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                {!isAdopted ? (
-                  <Button
-                    size="sm"
-                    onClick={handleMarkAsAdopted}
-                    disabled={updateCat.isPending}
-                    className="flex-1 font-prompt gap-1 sm:gap-1.5 text-[10px] sm:text-xs h-8 sm:h-9 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg sm:rounded-xl shadow-sm active:scale-[0.98]"
-                  >
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    <span className="truncate">{updateCat.isPending ? 'บันทึก...' : 'ได้บ้านแล้ว'}</span>
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleMarkAsAvailable}
-                    disabled={updateCat.isPending}
-                    className="flex-1 font-prompt gap-1 sm:gap-1.5 text-[10px] sm:text-xs h-8 sm:h-9 border-slate-200 hover:bg-slate-50 rounded-lg sm:rounded-xl active:scale-[0.98]"
-                  >
-                    <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    <span className="truncate">{updateCat.isPending ? 'บันทึก...' : 'เปิดรับเลี้ยงอีกครั้ง'}</span>
-                  </Button>
-                )}
-                {isAdmin && (
-                  <span className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-violet-100 text-violet-700 text-[10px] font-medium font-prompt shrink-0">
-                    <ShieldCheck className="w-3 h-3" />
-                    Admin
-                  </span>
-                )}
-              </div>
-            )}
+          {/* Status Management for Owner/Admin */}
+          {canManageStatus && (
+            <div className="flex items-center gap-1.5">
+              {!isAdopted ? (
+                <Button
+                  size="sm"
+                  onClick={handleMarkAsAdopted}
+                  disabled={updateCat.isPending}
+                  className="flex-1 font-prompt h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-[10px] shadow-sm"
+                >
+                  <Check className="w-3 h-3 mr-1" />
+                  ได้บ้านแล้ว
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleMarkAsAvailable}
+                  disabled={updateCat.isPending}
+                  className="flex-1 font-prompt h-7 border-slate-200 hover:bg-slate-50 rounded-full text-[10px] shadow-sm"
+                >
+                  <RotateCcw className="w-3 h-3 mr-1" />
+                  เปิดรับเลี้ยงคืน
+                </Button>
+              )}
+              {isAdmin && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-rose-400 hover:bg-rose-50 rounded-full"
+                  onClick={handleDeleteCat}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              )}
+            </div>
+          )}
 
-            {!isAdopted && (
-              <div className="flex gap-1 sm:gap-2">
+          {/* Action Buttons - Matching Reference */}
+          {!isAdopted && (
+            <div className="space-y-1.5 pt-0.5">
+              {/* Row 1: Contact + Chat (orange pills) */}
+              <div className="flex items-center gap-1">
+                {/* Contact */}
                 {!showContact ? (
                   <Button
-                    size="sm"
-                    className="flex-1 font-prompt gap-1 text-[8px] sm:text-xs h-6.5 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-orange-400 to-amber-400 text-white font-medium shadow-sm active:scale-[0.98]"
+                    size="xs"
+                    className="flex-1 font-prompt rounded-full bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-medium shadow-sm"
                     onClick={() => {
                       if (!user) {
                         alert.error('กรุณาเข้าสู่ระบบ');
@@ -371,134 +467,88 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
                       setShowContact(true);
                     }}
                   >
-                    <Eye className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
-                    <span className="hidden sm:inline">ดูติดต่อ</span>
+                    <Phone className="w-2.5 h-2.5" />
+                    <span>ติดต่อ</span>
                   </Button>
                 ) : (
                   <Button
-                    size="sm"
-                    className="flex-1 font-prompt gap-1 text-[8px] sm:text-xs h-6.5 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500 text-white font-medium shadow-sm active:scale-[0.98]"
+                    size="xs"
+                    className="flex-1 font-prompt rounded-full bg-emerald-500 text-white hover:bg-emerald-600 text-[7px] font-medium shadow-sm"
                     asChild
                   >
                     <a href={`tel:${contactPhone}`}>
-                      <MessageCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
-                      <span className="hidden sm:inline">โทร</span>
+                      <Phone className="w-2.5 h-2.5" />
+                      <span>โทร</span>
                     </a>
                   </Button>
                 )}
-                {canStartChat && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 font-prompt gap-1 text-[8px] sm:text-xs h-6.5 sm:h-10 rounded-lg sm:rounded-xl border border-orange-200 text-orange-500 bg-orange-50/50 active:scale-[0.98]"
-                    disabled={createConversation.isPending}
-                    onClick={() => {
-                      if (!user) {
-                        alert.error('กรุณาเข้าสู่ระบบ');
-                        router.push('/login');
-                        return;
-                      }
-                      if (!id || !userId) {
-                        alert.error('ไม่พบข้อมูล');
-                        return;
-                      }
-                      createConversation.mutate(
-                        { catId: id, ownerId: userId, adopterId: user.id },
-                        {
-                          onSuccess: (conversation) => {
-                            router.push(`/chat?conversationId=${conversation.id}`);
-                          },
-                        }
-                      );
-                    }}
-                  >
-                    <MessageCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
-                    <span className="hidden sm:inline">แชท</span>
-                  </Button>
-                )}
-              </div>
-            )}
 
-            {/* Share Button */}
-            <Popover>
-              <PopoverTrigger asChild>
+                {/* Chat */}
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full font-prompt gap-1 text-[8px] sm:text-xs h-6 sm:h-9 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 active:scale-[0.98]"
-                  aria-label="แชร์"
+                  size="xs"
+                  className="flex-1 font-prompt rounded-full bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-medium shadow-sm"
+                  disabled={!canStartChat || createConversation.isPending}
+                  onClick={() => {
+                    if (!user) {
+                      alert.error('กรุณาเข้าสู่ระบบ');
+                      router.push('/login');
+                      return;
+                    }
+                    if (!id || !userId) {
+                      alert.error('ไม่พบข้อมูล');
+                      return;
+                    }
+                    createConversation.mutate(
+                      { catId: id, ownerId: userId, adopterId: user.id },
+                      {
+                        onSuccess: (conversation) => {
+                          router.push(`/chat?conversationId=${conversation.id}`);
+                        },
+                      }
+                    );
+                  }}
                 >
-                  <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span className="sm:inline">แชร์</span>
+                  <MessageCircle className="w-2.5 h-2.5" />
+                  <span>แชท</span>
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent align="center" sideOffset={8} className="w-[calc(100vw-2rem)] max-w-64 rounded-xl sm:rounded-2xl border-0 bg-white shadow-2xl p-0 overflow-hidden">
-                <div className="bg-gradient-to-r from-orange-400 to-amber-400 px-3 sm:px-4 py-2.5 sm:py-3">
-                  <p className="text-xs sm:text-sm font-medium text-white font-prompt flex items-center gap-1.5 sm:gap-2">
-                    <span className="text-base sm:text-lg">🐾</span>
-                    <span className="truncate">ช่วยแชร์ให้น้อง{name}</span>
-                  </p>
-                </div>
-                <div className="p-1.5 sm:p-2 space-y-0.5 sm:space-y-1">
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2.5 sm:gap-3 rounded-lg sm:rounded-xl px-2.5 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm font-prompt text-slate-700 hover:bg-blue-50 active:bg-blue-100 transition-all"
-                    onClick={shareOnFacebook}
-                  >
-                    <span className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-blue-600 text-white shadow-md shrink-0">
-                      <FaFacebookF className="text-sm sm:text-base" />
-                    </span>
-                    <span className="font-medium">Facebook</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2.5 sm:gap-3 rounded-lg sm:rounded-xl px-2.5 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm font-prompt text-slate-700 hover:bg-green-50 active:bg-green-100 transition-all"
-                    onClick={shareOnLine}
-                  >
-                    <span className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-green-500 text-white shadow-md shrink-0">
-                      <FaLine className="text-lg sm:text-xl" />
-                    </span>
-                    <span className="font-medium">LINE</span>
-                  </button>
-                </div>
-                <div className="border-t border-slate-100 p-1.5 sm:p-2">
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-prompt text-slate-600 hover:bg-slate-50 active:bg-slate-100 transition-all"
-                    onClick={copyShareLink}
-                  >
-                    <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg bg-amber-100 text-amber-600 shrink-0">
-                      <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </span>
-                    <span>คัดลอกข้อความ</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-prompt text-slate-600 hover:bg-slate-50 active:bg-slate-100 transition-all"
-                    onClick={copyUrlOnly}
-                  >
-                    <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg bg-slate-100 text-slate-500 shrink-0">
-                      <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </span>
-                    <span>คัดลอก URL</span>
-                  </button>
-                </div>
-              </PopoverContent>
-            </Popover>
-
-            {/* Adopted Status Info */}
-            {isAdopted && !canManageStatus && (
-              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-center">
-                <p className="text-xs sm:text-sm font-semibold text-emerald-700 font-prompt flex items-center justify-center gap-1 sm:gap-1.5">
-                  <span className="text-sm sm:text-base">✨</span>
-                  <span className="truncate">น้อง{name}ได้บ้านใหม่แล้ว</span>
-                </p>
-                <p className="text-[10px] sm:text-xs text-emerald-600/70 font-prompt mt-0.5 sm:mt-1">
-                  ขอบคุณทุกคนที่ให้ความสนใจ 💚
-                </p>
               </div>
-            )}
-          </div>
+
+              {/* Row 2: Share (outline, separate row) */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className="flex items-center justify-center gap-1 w-full text-[10px] font-prompt text-slate-400 hover:text-slate-600 transition-colors py-0.5"
+                    type="button"
+                  >
+                    <Share2 className="w-3 h-3" />
+                    <span>แชร์</span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="center" className="w-44 p-1.5">
+                  <div className="grid gap-0.5">
+                    <button className="flex items-center gap-2 w-full px-2 py-1.5 text-[11px] font-prompt text-slate-600 hover:bg-slate-50 rounded-md transition-colors" onClick={shareOnFacebook}>
+                      <FaFacebookF className="text-blue-600 w-3 h-3" /> Facebook
+                    </button>
+                    <button className="flex items-center gap-2 w-full px-2 py-1.5 text-[11px] font-prompt text-slate-600 hover:bg-slate-50 rounded-md transition-colors" onClick={shareOnLine}>
+                      <FaLine className="text-green-500 w-3 h-3" /> LINE
+                    </button>
+                    <button className="flex items-center gap-2 w-full px-2 py-1.5 text-[11px] font-prompt text-slate-600 hover:bg-slate-50 rounded-md transition-colors" onClick={copyShareLink}>
+                      <MessageCircle className="w-3 h-3 text-slate-400" /> คัดลอกลิงก์
+                    </button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+
+          {/* Adopted Status */}
+          {isAdopted && !canManageStatus && (
+            <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-2 text-center">
+              <p className="text-[11px] font-semibold text-emerald-700 font-prompt">
+                ✨ น้อง{name}ได้บ้านใหม่แล้ว
+              </p>
+            </div>
+          )}
         </div>
       </Card>
 

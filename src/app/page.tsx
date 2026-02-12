@@ -58,7 +58,7 @@ const Home = () => {
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const mapButtonClass = "bg-gradient-sunrise text-white shadow-soft hover:shadow-hover border-0";
 
-  const urgentCats = cats?.filter(cat => cat.is_urgent && !cat.is_adopted).slice(0, 3) || [];
+  const urgentCats = cats?.filter(cat => cat.is_urgent && !cat.is_adopted).slice(0, 15) || [];
   const totalAdopted = cats?.filter(cat => cat.is_adopted).length || 0;
   const totalAvailable = cats?.filter(cat => !cat.is_adopted).length || 0;
   const totalReports = reports?.length || 0;
@@ -346,7 +346,7 @@ const Home = () => {
               <p className="text-muted-foreground font-prompt">น้องหมาน้องแมวกำลังรอความรัก พบกับลูกสุนัขและลูกแมวที่ต้องการโอกาสที่สอง เลือกรับเลี้ยงที่ถูกชะตากับคุณวันนี้</p>
             </div>
             <Link href="/adopt" className="w-full sm:w-auto">
-              <Button variant="outline" className="w-full font-prompt gap-2">
+              <Button className="w-full sm:w-auto font-prompt gap-2 rounded-full bg-gradient-to-r from-orange-400 to-rose-400 text-white shadow-md hover:shadow-lg hover:from-orange-500 hover:to-rose-500 hover:-translate-y-0.5 transition-all border-0">
                 ดูทั้งหมด
                 <TrendingUp className="w-4 h-4" />
               </Button>
@@ -354,28 +354,29 @@ const Home = () => {
           </div>
 
           {urgentCats && urgentCats.length > 0 ? (
-            <div className="grid grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
+            <div className="flex overflow-x-auto pb-4 snap-x snap-mandatory gap-4 -mx-4 px-4 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-6 sm:overflow-visible sm:pb-0 sm:mx-0 sm:px-0 scrollbar-hide">
               {urgentCats.map((cat) => (
-                <CatCard
-                  key={cat.id}
-                  id={cat.id}
-                  name={cat.name}
-                  age={cat.age}
-                  province={cat.province}
-                  district={cat.district}
-                  images={cat.image_url}
-                  story={cat.story}
-                  gender={cat.gender}
-                  isAdopted={cat.is_adopted}
-                  urgent={cat.is_urgent}
-                  contactName={cat.contact_name}
-                  contactPhone={cat.contact_phone}
-                  contactLine={cat.contact_line}
-                  userId={cat.user_id}
-                  healthStatus={cat.health_status}
-                  isSterilized={cat.is_sterilized}
-                  createdAt={cat.created_at}
-                />
+                <div key={cat.id} className="min-w-[280px] w-[85vw] sm:min-w-0 sm:w-auto snap-center">
+                  <CatCard
+                    id={cat.id}
+                    name={cat.name}
+                    age={cat.age}
+                    province={cat.province}
+                    district={cat.district}
+                    images={cat.image_url}
+                    story={cat.story}
+                    gender={cat.gender}
+                    isAdopted={cat.is_adopted}
+                    urgent={cat.is_urgent}
+                    contactName={cat.contact_name}
+                    contactPhone={cat.contact_phone}
+                    contactLine={cat.contact_line}
+                    userId={cat.user_id}
+                    healthStatus={cat.health_status}
+                    isSterilized={cat.is_sterilized}
+                    createdAt={cat.created_at}
+                  />
+                </div>
               ))}
             </div>
           ) : (

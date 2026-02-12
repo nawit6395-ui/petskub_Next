@@ -8,19 +8,20 @@ export interface Cat {
   age: string;
   gender: 'ชาย' | 'หญิง' | 'ไม่ระบุ';
   province: string;
-  district?: string;
-  image_url?: string[];
-  story?: string;
-  health_status?: string;
+  district: string | null;
+  image_url: string[] | null;
+  story: string | null;
+  health_status: string | null;
   is_sterilized: boolean;
   is_adopted: boolean;
   is_urgent: boolean;
   contact_name: string;
   contact_phone: string;
-  contact_line?: string;
+  contact_line: string | null;
   user_id: string;
   created_at: string;
   updated_at: string;
+  views?: number; // Added views property
 }
 
 export const useCats = () => {

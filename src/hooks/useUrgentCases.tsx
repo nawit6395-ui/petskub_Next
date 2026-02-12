@@ -17,6 +17,7 @@ export interface UrgentCase {
   user_id: string;
   created_at: string;
   updated_at: string;
+  views?: number; // Added views property
 }
 
 export const useUrgentCases = (options?: { includeResolved?: boolean }) => {

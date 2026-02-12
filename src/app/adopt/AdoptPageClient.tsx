@@ -249,28 +249,35 @@ const AdoptPageClient = () => {
 
             {filteredCats.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
-                {filteredCats.map((cat) => (
-                  <CatCard
-                    key={cat.id}
-                    id={cat.id}
-                    name={cat.name}
-                    age={cat.age}
-                    province={cat.province}
-                    district={cat.district}
-                    images={cat.image_url ?? []}
-                    story={cat.story}
-                    gender={cat.gender}
-                    isAdopted={cat.is_adopted}
-                    urgent={cat.is_urgent}
-                    contactName={cat.contact_name}
-                    contactPhone={cat.contact_phone}
-                    contactLine={cat.contact_line}
-                    userId={cat.user_id}
-                    healthStatus={cat.health_status}
-                    isSterilized={cat.is_sterilized}
-                    createdAt={cat.created_at}
-                  />
-                ))}
+                {filteredCats.map((cat) => {
+                  const videoExtensions = ['.mp4', '.mov', '.webm'];
+                  const hasVideo = cat.image_url?.some((url) => videoExtensions.some((ext) => url.toLowerCase().endsWith(ext)));
+
+                  return (
+                    <CatCard
+                      key={cat.id}
+                      id={cat.id}
+                      name={cat.name}
+                      age={cat.age}
+                      province={cat.province}
+                      district={cat.district}
+                      images={cat.image_url ?? []}
+                      story={cat.story}
+                      gender={cat.gender}
+                      isAdopted={cat.is_adopted}
+                      urgent={cat.is_urgent}
+                      contactName={cat.contact_name}
+                      contactPhone={cat.contact_phone}
+                      contactLine={cat.contact_line}
+                      userId={cat.user_id}
+                      healthStatus={cat.health_status}
+                      isSterilized={cat.is_sterilized}
+                      createdAt={cat.created_at}
+                      hasVideo={hasVideo}
+                      views={cat.views}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <div className="py-12 text-center">
