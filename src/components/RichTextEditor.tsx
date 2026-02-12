@@ -54,6 +54,27 @@ const MenuBar = ({ editor, onImageUpload, charCount, maxLength }: { editor: Edit
     const [linkUrl, setLinkUrl] = useState('');
     const [isLinkPopoverOpen, setIsLinkPopoverOpen] = useState(false);
 
+    const addImage = useCallback(() => {
+        if (!editor) return;
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (event) => {
+            const file = (event.target as HTMLInputElement).files?.[0];
+            if (file && onImageUpload) {
+                try {
+                    const url = await onImageUpload(file);
+                    if (url) {
+                        editor.chain().focus().setImage({ src: url }).run();
+                    }
+                } catch (error) {
+                    console.error("Image upload failed", error);
+                }
+            }
+        };
+        input.click();
+    }, [editor, onImageUpload]);
+
     if (!editor) {
         return null;
     }
@@ -75,26 +96,6 @@ const MenuBar = ({ editor, onImageUpload, charCount, maxLength }: { editor: Edit
         setIsLinkPopoverOpen(false);
         setLinkUrl('');
     };
-
-    const addImage = useCallback(() => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (event) => {
-            const file = (event.target as HTMLInputElement).files?.[0];
-            if (file && onImageUpload) {
-                try {
-                    const url = await onImageUpload(file);
-                    if (url) {
-                        editor.chain().focus().setImage({ src: url }).run();
-                    }
-                } catch (error) {
-                    console.error("Image upload failed", error);
-                }
-            }
-        };
-        input.click();
-    }, [editor, onImageUpload]);
 
     return (
         <div className="border-b bg-slate-50/80 p-1.5 sm:p-2 flex flex-wrap gap-0.5 sm:gap-1 items-center sticky top-0 z-10 backdrop-blur-sm">
@@ -471,7 +472,7 @@ const MenuBar = ({ editor, onImageUpload, charCount, maxLength }: { editor: Edit
 
 const RichTextEditor = ({ content, onChange, onImageUpload, placeholder = "เขียนเนื้อหา...", editable = true, maxLength, showCharCount = true }: RichTextEditorProps) => {
     const [charCount, setCharCount] = useState(0);
-    
+
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -507,7 +508,7 @@ const RichTextEditor = ({ content, onChange, onImageUpload, placeholder = "เ�
             const text = editor.getText();
             const count = text.length;
             setCharCount(count);
-            
+
             // ถ้าเกิน maxLength ให้แจ้งเตือน แต่ยังให้พิมพ์ได้ (จะ validate ตอน submit)
             onChange(editor.getHTML());
         },
@@ -522,6 +523,7 @@ const RichTextEditor = ({ content, onChange, onImageUpload, placeholder = "เ�
     // Update char count on mount
     useEffect(() => {
         if (editor) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             setCharCount(editor.getText().length);
         }
     }, [editor]);
@@ -531,6 +533,7 @@ const RichTextEditor = ({ content, onChange, onImageUpload, placeholder = "เ�
         if (editor && content && editor.getHTML() !== content) {
             if (editor.getText() === '' && content) {
                 editor.commands.setContent(content);
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 setCharCount(editor.getText().length);
             }
         }
@@ -550,8 +553,8 @@ const RichTextEditor = ({ content, onChange, onImageUpload, placeholder = "เ�
     return (
         <div className={cn(
             "border rounded-xl sm:rounded-2xl overflow-hidden shadow-sm bg-white transition-all",
-            isOverLimit 
-                ? "ring-2 ring-red-300 border-red-300" 
+            isOverLimit
+                ? "ring-2 ring-red-300 border-red-300"
                 : "focus-within:ring-2 focus-within:ring-orange-200 focus-within:border-orange-300"
         )}>
             <MenuBar editor={editor} onImageUpload={onImageUpload} charCount={showCharCount ? charCount : undefined} maxLength={maxLength} />

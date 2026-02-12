@@ -88,6 +88,7 @@ export const UrgentCaseCard = ({
 
   useEffect(() => {
     if (views !== undefined) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       setDisplayViews(views);
     }
   }, [views]);

@@ -9,6 +9,7 @@ export const useFavorites = () => {
         const storedFavorites = localStorage.getItem('petskub_favorites');
         if (storedFavorites) {
             try {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 setFavorites(JSON.parse(storedFavorites));
             } catch (e) {
                 console.error('Failed to parse favorites from local storage', e);

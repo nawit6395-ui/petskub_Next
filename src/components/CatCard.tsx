@@ -398,7 +398,7 @@ const CatCard = ({ id, name, age, province, district, image, images, story, gend
           {/* Story */}
           {story && (
             <p className="text-[10px] text-slate-400 font-prompt line-clamp-2 leading-relaxed">
-              "{story}"
+              &quot;{story}&quot;
             </p>
           )}
 

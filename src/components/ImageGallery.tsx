@@ -48,6 +48,7 @@ export const ImageGallery = ({
   useEffect(() => {
     if (open && api) {
       api.scrollTo(initialIndex);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       setCurrentIndex(initialIndex);
     }
   }, [open, api, initialIndex]);
